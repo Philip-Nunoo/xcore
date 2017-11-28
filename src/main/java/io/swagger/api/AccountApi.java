@@ -11,6 +11,7 @@ import io.swagger.model.Statements;
 
 import io.swagger.annotations.*;
 import io.swagger.model.AccountPostingResponse;
+import io.swagger.model.TransactionsResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,7 +98,12 @@ public interface AccountApi {
     
     @RequestMapping(value = "/account/{accountId}/transactions",
         method = RequestMethod.GET)
-    ResponseEntity<Void> accountAccountIdTransactionsGet(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") Long accountId,@ApiParam(value = "") @RequestParam(value = "startDate", required = false) String startDate,@ApiParam(value = "") @RequestParam(value = "endDate", required = false) String endDate);
+    ResponseEntity<TransactionsResponse> accountAccountIdTransactionsGet(
+            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "") @RequestParam(value = "startDate", required = false) String startDate,
+            @ApiParam(value = "") @RequestParam(value = "endDate", required = false) String endDate,
+            @ApiParam(value = "") @RequestParam(value = "limit", required = false) Integer limit
+    );
 
 
     @ApiOperation(value = "Withdraw money", notes = "Withdraw money from an account", response = Balance.class, authorizations = {

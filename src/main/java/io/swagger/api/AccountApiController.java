@@ -1,6 +1,6 @@
 package io.swagger.api;
 
-import envtest.model.Customer;
+import envtest.model.TransEnquiry;
 import envtest.model.TransactionPosting;
 import envtest.proc.AccountCall;
 import io.swagger.model.Balance;
@@ -9,10 +9,12 @@ import io.swagger.model.Statements;
 import io.swagger.annotations.*;
 import io.swagger.model.Account;
 import io.swagger.model.AccountPostingResponse;
-import java.sql.ResultSet;
+import io.swagger.model.TransactionsResponse;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -120,11 +122,56 @@ public class AccountApiController implements AccountApi {
         return new ResponseEntity<Statements>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> accountAccountIdTransactionsGet(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") Long accountId,
-        @ApiParam(value = "") @RequestParam(value = "startDate", required = false) String startDate,
-        @ApiParam(value = "") @RequestParam(value = "endDate", required = false) String endDate) {
-        // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    @Override
+    public ResponseEntity<TransactionsResponse> accountAccountIdTransactionsGet(
+            @ApiParam(value = "The account id of the account",required=true ) 
+            @PathVariable("accountId") String accountId,
+            @ApiParam(value = "") @RequestParam(value = "startDate", required = false) String startDate,
+            @ApiParam(value = "") @RequestParam(value = "endDate", required = false) String endDate,
+            @ApiParam(value = "") @RequestParam(value = "limit", required = false) Integer limit
+    ) {
+        
+        ResponseEntity<TransactionsResponse> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        TransactionsResponse transactionResponse = new TransactionsResponse();
+        
+        try {
+            AccountCall accountCall = new AccountCall(accountId);
+            
+            limit = (limit == null || limit <= 0) ? 10 : limit;
+            String startDateString = "06/05/2017";
+            String endDateString = "08/06/2017";
+            
+            ArrayList<TransEnquiry> accounts = new ArrayList<>();
+            
+            if (startDate != null && endDate != null) {
+                SimpleDateFormat dt = new SimpleDateFormat("mm/dd/yyyy");
+                Date startDATE = dt.parse(startDate);
+                Date endDATE = dt.parse(endDate);
+                
+                accounts = accountCall.getTransEnquiry(startDATE, endDATE, limit);
+            } else {
+                accounts = accountCall.getTransEnquiry(limit);
+            }       
+                        
+            transactionResponse.setMessage(accounts.size() <= 0 ? "No transactions found" : "Success");
+            transactionResponse.setResponseCode(accounts.size() > 0 ? 200 : 404);
+            transactionResponse.setTransactions(accounts);
+            
+            response = new ResponseEntity<>(
+                    transactionResponse,
+                    accounts.size() > 0 ? HttpStatus.OK : HttpStatus.NOT_FOUND
+            );
+        } catch (SQLException ex) {
+            transactionResponse.setMessage("Internal Server error: " + ex.getMessage());
+            transactionResponse.setResponseCode(0);
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            transactionResponse.setMessage("Internal Server error: " + ex.getMessage());
+            transactionResponse.setResponseCode(0);
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return response;
     }
 
     public ResponseEntity<Balance> accountAccountIdWithdrawalPut(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") Long accountId,
