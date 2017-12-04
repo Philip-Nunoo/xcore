@@ -73,7 +73,6 @@ public class AccountApiController implements AccountApi {
             @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
             @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  Long amount,
             @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
-            @ApiParam(value = "The batchNo") @RequestParam(value="batchNo", required=false)  String batchNo,
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
             @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
             @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
@@ -95,7 +94,6 @@ public class AccountApiController implements AccountApi {
                     amount,
                     narration, 
                     documentRef,
-                    batchNo,
                     postBy,
                     appBy,
                     postTerminal, 
@@ -115,7 +113,55 @@ public class AccountApiController implements AccountApi {
         } 
         
         return new ResponseEntity<>(response, httpStatus);
-    }
+    }    
+
+    
+    @Override
+    public ResponseEntity<AccountPostingResponse> accountAccountIdWithdrawalPut(
+            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  Long amount,
+            @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
+            @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
+            @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
+            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
+            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
+            @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy) {
+        // do some magic!
+        
+        HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+        AccountPostingResponse response = null;
+        
+        try {
+            System.out.println(accountId);
+            AccountCall accountCall = new AccountCall(accountId);
+            
+            // Todo: should add balance in account posting response
+            TransactionPosting acr = accountCall.withdrawMoney(
+                    accountId,
+                    amount,
+                    narration, 
+                    documentRef,
+                    postBy,
+                    appBy,
+                    postTerminal, 
+                    customerTel,
+                    transBy
+            );
+            
+            httpStatus = acr.isResponse() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+            
+            response = new AccountPostingResponse(httpStatus.value(), acr.getMessage());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+            
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response = new AccountPostingResponse(httpStatus.value(), ex.getMessage());
+        } 
+        
+        return new ResponseEntity<>(response, httpStatus);
+    }    
 
     public ResponseEntity<Statements> accountAccountIdStatementGet(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") Long accountId) {
         // do some magic!
@@ -172,15 +218,6 @@ public class AccountApiController implements AccountApi {
         }
         
         return response;
-    }
-
-    public ResponseEntity<Balance> accountAccountIdWithdrawalPut(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") Long accountId,
-        @ApiParam(value = "Amount to debit on account", required=true) @RequestPart(value="amount", required=true)  String amount,
-        @ApiParam(value = "Narration for transaction", required=true) @RequestPart(value="narration", required=true)  String narration,
-        @ApiParam(value = "The fee amount", required=true) @RequestPart(value="feeAmount", required=true)  String feeAmount,
-        @ApiParam(value = "The fee code", required=true) @RequestPart(value="feeCode", required=true)  String feeCode) {
-        // do some magic!
-        return new ResponseEntity<Balance>(HttpStatus.OK);
     }
 
 }

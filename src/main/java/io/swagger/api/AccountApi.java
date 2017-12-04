@@ -67,7 +67,30 @@ public interface AccountApi {
             @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
             @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  Long amount,
             @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
-            @ApiParam(value = "The batchNo") @RequestParam(value="batchNo", required=false)  String batchNo,
+            @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
+            @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
+            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
+            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
+            @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy);
+
+    
+    @ApiOperation(value = "Withdraw money", notes = "Withdraw money from an account", response = Balance.class, authorizations = {
+        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiSecret")
+    }, tags={ "Account", })    
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Balance.class),
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
+    
+    @RequestMapping(value = "/account/{accountId}/withdraw",
+        produces = { "application/json" }, 
+        consumes = { "application/x-www-form-urlencoded" },
+        method = RequestMethod.PUT)
+    ResponseEntity<AccountPostingResponse> accountAccountIdWithdrawalPut(
+            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  Long amount,
+            @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
             @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
             @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
@@ -104,20 +127,5 @@ public interface AccountApi {
             @ApiParam(value = "") @RequestParam(value = "endDate", required = false) String endDate,
             @ApiParam(value = "") @RequestParam(value = "limit", required = false) Integer limit
     );
-
-
-    @ApiOperation(value = "Withdraw money", notes = "Withdraw money from an account", response = Balance.class, authorizations = {
-        @Authorization(value = "apiKey"),
-        @Authorization(value = "apiSecret")
-    }, tags={ "Account", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Balance.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
     
-    @RequestMapping(value = "/account/{accountId}/withdrawal",
-        produces = { "application/json" }, 
-        consumes = { "application/x-www-form-urlencoded" },
-        method = RequestMethod.PUT)
-    ResponseEntity<Balance> accountAccountIdWithdrawalPut(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") Long accountId,@ApiParam(value = "Amount to debit on account", required=true) @RequestPart(value="amount", required=true)  String amount,@ApiParam(value = "Narration for transaction", required=true) @RequestPart(value="narration", required=true)  String narration,@ApiParam(value = "The fee amount", required=true) @RequestPart(value="feeAmount", required=true)  String feeAmount,@ApiParam(value = "The fee code", required=true) @RequestPart(value="feeCode", required=true)  String feeCode);
-
 }
