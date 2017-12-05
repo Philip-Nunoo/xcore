@@ -110,7 +110,7 @@ public class AccountApiController implements AccountApi {
     @Override
     public ResponseEntity<AccountPostingResponse> accountAccountIdDepositPut(
             @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
-            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  Long amount,
+            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
             @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
             @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
@@ -130,7 +130,7 @@ public class AccountApiController implements AccountApi {
             // Todo: should add balance in account posting response
             TransactionPosting acr = accountCall.depositMoney(
                     accountId,
-                    amount,
+                    Float.parseFloat(amount),
                     narration, 
                     documentRef,
                     postBy,
@@ -158,7 +158,7 @@ public class AccountApiController implements AccountApi {
     @Override
     public ResponseEntity<AccountPostingResponse> accountAccountIdWithdrawalPut(
             @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
-            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  Long amount,
+            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
             @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
             @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
@@ -178,7 +178,7 @@ public class AccountApiController implements AccountApi {
             // Todo: should add balance in account posting response
             TransactionPosting acr = accountCall.withdrawMoney(
                     accountId,
-                    amount,
+                    Float.parseFloat(amount),
                     narration, 
                     documentRef,
                     postBy,
@@ -200,11 +200,6 @@ public class AccountApiController implements AccountApi {
         } 
         
         return new ResponseEntity<>(response, httpStatus);
-    }    
-
-    public ResponseEntity<Statements> accountAccountIdStatementGet(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") Long accountId) {
-        // do some magic!
-        return new ResponseEntity<Statements>(HttpStatus.OK);
     }
 
     @Override
@@ -223,8 +218,6 @@ public class AccountApiController implements AccountApi {
             AccountCall accountCall = new AccountCall(accountId);
             
             limit = (limit == null || limit <= 0) ? 10 : limit;
-            String startDateString = "06/05/2017";
-            String endDateString = "08/06/2017";
             
             ArrayList<TransEnquiry> accounts = new ArrayList<>();
             
