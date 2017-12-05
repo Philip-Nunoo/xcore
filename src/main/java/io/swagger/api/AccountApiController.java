@@ -1,5 +1,6 @@
 package io.swagger.api;
 
+import envtest.model.MandateEnquiry;
 import envtest.model.TransEnquiry;
 import envtest.model.TransactionPosting;
 import envtest.proc.AccountCall;
@@ -9,6 +10,7 @@ import io.swagger.model.Statements;
 import io.swagger.annotations.*;
 import io.swagger.model.Account;
 import io.swagger.model.AccountPostingResponse;
+import io.swagger.model.MandateResponse;
 import io.swagger.model.TransactionsResponse;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -181,6 +183,43 @@ public class AccountApiController implements AccountApi {
         @ApiParam(value = "The fee code", required=true) @RequestPart(value="feeCode", required=true)  String feeCode) {
         // do some magic!
         return new ResponseEntity<Balance>(HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<MandateResponse> retrieveAccountMandate(
+            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId
+    ) {
+        ResponseEntity<MandateResponse> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        
+        try {
+            MandateResponse mandateResponse = new MandateResponse();
+            AccountCall accountCall = new AccountCall(accountId);
+            
+            ArrayList<MandateEnquiry> mandates = new ArrayList<>();
+            
+            mandates = accountCall.getMandate(accountId);
+            
+            mandateResponse.setMandates(mandates);
+            
+            if (mandates.size() > 0) {
+                mandateResponse.setResponseCode(200);
+                mandateResponse.setMessage("Successful");
+            } else {
+                mandateResponse.setResponseCode(404);
+                mandateResponse.setMessage("Mandate not found");
+            }
+            
+            response = new ResponseEntity<>(mandateResponse,
+                mandates.size() > 0 ?
+                        HttpStatus.OK :
+                        HttpStatus.NOT_FOUND
+            );
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return response;
+         
     }
 
 }

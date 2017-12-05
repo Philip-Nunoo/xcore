@@ -11,6 +11,7 @@ import io.swagger.model.Statements;
 
 import io.swagger.annotations.*;
 import io.swagger.model.AccountPostingResponse;
+import io.swagger.model.MandateResponse;
 import io.swagger.model.TransactionsResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,6 +36,20 @@ public interface AccountApi {
         produces = { "application/json" }, 
         method = RequestMethod.GET)
     ResponseEntity<Account> retrieveAccount(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId);
+
+
+     @ApiOperation(value = "Retrieve Account mandate", notes = "Retrieve mandate details on a specific account", response = MandateResponse.class, authorizations = {
+        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiSecret")
+    }, tags={ "Account", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Account.class),
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
+    
+    @RequestMapping(value = "/account/{accountId}/mandate",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<MandateResponse> retrieveAccountMandate(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId);
 
 
     @ApiOperation(value = "Retrieve Account", notes = "Retrieve details on a specific account", response = Account.class, authorizations = {
