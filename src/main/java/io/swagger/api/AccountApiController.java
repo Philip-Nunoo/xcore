@@ -8,7 +8,6 @@ import envtest.model.TransEnquiry;
 import envtest.model.TransactionPosting;
 import envtest.proc.AccountCall;
 import io.swagger.model.Balance;
-import io.swagger.model.Statements;
 
 import io.swagger.model.Account;
 import io.swagger.model.AccountPostingResponse;
@@ -41,9 +40,7 @@ public class AccountApiController implements AccountApi {
             MandateResponse mandateResponse = new MandateResponse();
             AccountCall accountCall = new AccountCall(accountId);
             
-            ArrayList<MandateEnquiry> mandates = new ArrayList<>();
-            
-            mandates = accountCall.getMandate(accountId);
+            ArrayList<MandateEnquiry> mandates = accountCall.getMandate(accountId);
             
             mandateResponse.setMandates(mandates);
             
