@@ -51,7 +51,31 @@ public interface RequestApi {
         produces = { "application/json" }, 
         consumes = { "application/x-www-form-urlencoded" },
         method = RequestMethod.POST)
-    ResponseEntity<ApiSuccessResponse> requestChequeBookPost(@ApiParam(value = "", required=true) @RequestPart(value="accountId", required=true)  String accountId,@ApiParam(value = "", required=true) @RequestPart(value="currency", required=true)  String currency,@ApiParam(value = "The document number", required=true) @RequestPart(value="docNumber", required=true)  String docNumber,@ApiParam(value = "Number of leaves", required=true) @RequestPart(value="leaves", required=true)  String leaves,@ApiParam(value = "", required=true) @RequestPart(value="deliveryChannel", required=true)  String deliveryChannel,@ApiParam(value = "", required=true) @RequestPart(value="deliveryBranch", required=true)  String deliveryBranch);
+    ResponseEntity<ApiSuccessResponse> requestChequeBookPost(
+            @ApiParam(value = "", required=true) @RequestParam(value="accountId", required=true)  String accountId,
+            @ApiParam(value = "Number of leaves", required=true) @RequestParam(value="leaves", required=true)  String leaves,
+            @ApiParam(value = "", required=true) @RequestParam(value="userid", required=true)  String userid
+            );
+    
+    @ApiOperation(value = "Service Request(Statement)", notes = "Request for statement from core", response = ApiSuccessResponse.class, authorizations = {
+        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiSecret")
+    }, tags={ "Request", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class) })
+    
+    @RequestMapping(value = "/request/Statement",
+        produces = { "application/json" }, 
+        consumes = { "application/x-www-form-urlencoded" },
+        method = RequestMethod.POST)
+    ResponseEntity<ApiSuccessResponse> requestStatement(
+            @ApiParam(value = " accountid", required=true) @RequestParam(value="accountid", required=true)  String accountid,
+            @ApiParam(value = " start date", required=true) @RequestParam(value="startdate", required=true)  String startdate,
+            @ApiParam(value = "end date", required=true) @RequestParam(value="enddate", required=true)  String enddate,
+            @ApiParam(value = "statement type", required=true) @RequestParam(value="statementtype", required=true)  String statementtype,
+            @ApiParam(value = "user id", required=true) @RequestParam(value="userid", required=true)  String userid
+            );
+    
 
 
     @ApiOperation(value = "Service Request(Email)", notes = "Request for email from core", response = ApiSuccessResponse.class, authorizations = {
@@ -93,6 +117,13 @@ public interface RequestApi {
         produces = { "application/json" }, 
         consumes = { "application/x-www-form-urlencoded" },
         method = RequestMethod.POST)
-    ResponseEntity<ApiSuccessResponse> requestStopCheckPost(@ApiParam(value = "", required=true) @RequestPart(value="accountId", required=true)  String accountId,@ApiParam(value = "", required=true) @RequestPart(value="chequeNumber", required=true)  String chequeNumber,@ApiParam(value = "", required=true) @RequestPart(value="reason", required=true)  String reason);
-
-}
+    ResponseEntity<ApiSuccessResponse> requestStopCheckPost(
+        @ApiParam(value = "", required=true) @RequestParam(value="accountId", required=true)  String accountId,
+        @ApiParam(value = "", required=true) @RequestParam(value="StartCheque", required=true)  String StartCheque,
+        @ApiParam(value = "", required=true) @RequestParam(value="EndCheque", required=true)  String EndCheque ,
+        @ApiParam(value = "", required=true) @RequestParam(value="IssueDate", required=true)  String IssueDate ,
+        @ApiParam(value = "", required=true) @RequestParam(value="BeneficaryName", required=true)  String BeneficaryName ,
+        @ApiParam(value = "", required=true) @RequestParam(value="ChequeAmount", required=true)  String ChequeAmount 
+    
+    );        
+  }
