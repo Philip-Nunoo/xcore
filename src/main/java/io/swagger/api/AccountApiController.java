@@ -210,7 +210,7 @@ public class AccountApiController implements AccountApi {
     }
 
     @Override
-    public ResponseEntity<AccountPostingResponse> accountAccountIdWithdrawalPut(
+    public ResponseEntity<AccountPostingResponse> accountAccountIdTransferPut(
             @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
             @ApiParam(value = "The destination account id of the account",required=true ) @PathVariable("destinationAccountId") String destinationAccountId,
             @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
@@ -222,7 +222,44 @@ public class AccountApiController implements AccountApi {
             @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
             @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy) {
         
-        return null;
+        
+        HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+        AccountPostingResponse response = null;
+        
+        try {
+            System.out.println(accountId);
+            AccountCall accountCall = new AccountCall(accountId);
+            
+            TransactionPosting acr = accountCall.transferFunds(
+                    accountId, 
+                    destinationAccountId, 
+                    Float.parseFloat(amount), 
+                    narration, 
+                    documentRef, 
+                    postBy, 
+                    appBy, 
+                    postTerminal, 
+                    customerTel, 
+                    transBy
+            );
+            
+            httpStatus = acr.isResponse() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+            
+            response = new AccountPostingResponse(httpStatus.value(), acr.getMessage());
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+            
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response = new AccountPostingResponse(httpStatus.value(), ex.getMessage());
+        } catch (Exception ex) { 
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+            
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response = new AccountPostingResponse(httpStatus.value(), ex.getMessage());
+        }
+        
+        return new ResponseEntity<>(response, httpStatus);
         
     }
     

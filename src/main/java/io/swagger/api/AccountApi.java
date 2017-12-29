@@ -123,7 +123,7 @@ public interface AccountApi {
         produces = { "application/json" }, 
         consumes = { "application/x-www-form-urlencoded" },
         method = RequestMethod.PUT)
-    ResponseEntity<AccountPostingResponse> accountAccountIdWithdrawalPut(
+    ResponseEntity<AccountPostingResponse> accountAccountIdTransferPut(
             @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
             @ApiParam(value = "The destination account id of the account",required=true ) @PathVariable("destinationAccountId") String destinationAccountId,
             @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
