@@ -110,7 +110,31 @@ public interface AccountApi {
             @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
             @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
             @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy);
-
+    
+    @ApiOperation(value = "Transfer funds", notes = "Transfer money from an account to another. (Same bank)", response = Balance.class, authorizations = {
+        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiSecret")
+    }, tags={ "Account", })    
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Balance.class),
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
+    
+    @RequestMapping(value = "/account/{accountId}/transfer",
+        produces = { "application/json" }, 
+        consumes = { "application/x-www-form-urlencoded" },
+        method = RequestMethod.PUT)
+    ResponseEntity<AccountPostingResponse> accountAccountIdWithdrawalPut(
+            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "The destination account id of the account",required=true ) @PathVariable("destinationAccountId") String destinationAccountId,
+            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
+            @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
+            @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
+            @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
+            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
+            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
+            @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy);
+    
 
     @ApiOperation(value = "Get User transaction", notes = "Get User transaction. Returns last 5 transactions if no or **startDate** and **endDate** is specified", response = Void.class, authorizations = {
         @Authorization(value = "apiKey"),
