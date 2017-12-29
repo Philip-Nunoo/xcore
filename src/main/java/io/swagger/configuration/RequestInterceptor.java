@@ -59,7 +59,7 @@ public class RequestInterceptor implements HandlerInterceptor {
             String fileName = directoryPath + "request." + com.union.corelogger.Helper.currentDateTime("yyyy-MM-dd") + ".csv";
             System.out.format("REQ %s >> ~ (%s) %s%s%n", method, Helper.currentDateTime(), serverIp, requestUrl);
             
-            RequestLog.request(fileName, serverIp, "TODO", method, requestUrl, "TODO - body");
+            // RequestLog.request(fileName, serverIp, "TODO", method, requestUrl, "TODO - body");
         }
         return true;
         
