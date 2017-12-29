@@ -146,7 +146,12 @@ public class AccountApiController implements AccountApi {
             
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             response = new AccountPostingResponse(httpStatus.value(), ex.getMessage());
-        } 
+        } catch (Exception ex) { 
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+            
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response = new AccountPostingResponse(httpStatus.value(), ex.getMessage());
+        }
         
         return new ResponseEntity<>(response, httpStatus);
     }    
@@ -194,7 +199,12 @@ public class AccountApiController implements AccountApi {
             
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
             response = new AccountPostingResponse(httpStatus.value(), ex.getMessage());
-        } 
+        } catch (Exception ex) { 
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+            
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            response = new AccountPostingResponse(httpStatus.value(), ex.getMessage());
+        }
         
         return new ResponseEntity<>(response, httpStatus);
     }
