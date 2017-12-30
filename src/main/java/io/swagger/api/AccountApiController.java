@@ -211,8 +211,8 @@ public class AccountApiController implements AccountApi {
 
     @Override
     public ResponseEntity<AccountPostingResponse> accountAccountIdTransferPut(
-            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
-            @ApiParam(value = "The destination account id of the account",required=true ) @PathVariable("destinationAccountId") String destinationAccountId,
+            @ApiParam(value = "The account to debit",required=true ) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "The account to credit",required=true ) @PathVariable("destinationAccountId") String destinationAccountId,
             @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
             @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,

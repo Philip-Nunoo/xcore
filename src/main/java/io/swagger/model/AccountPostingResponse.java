@@ -6,7 +6,6 @@
 package io.swagger.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import envtest.model.TransactionPosting;
 
 /**
  *

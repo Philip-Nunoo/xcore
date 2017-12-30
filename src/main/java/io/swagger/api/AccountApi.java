@@ -7,7 +7,6 @@ package io.swagger.api;
 
 import io.swagger.model.Account;
 import io.swagger.model.Balance;
-import io.swagger.model.Statements;
 
 import io.swagger.annotations.*;
 import io.swagger.model.AccountPostingResponse;
@@ -116,7 +115,7 @@ public interface AccountApi {
         @Authorization(value = "apiSecret")
     }, tags={ "Account", })    
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Balance.class),
+        @ApiResponse(code = 200, message = "OK", response = AccountPostingResponse.class),
         @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
     
     @RequestMapping(value = "/account/{accountId}/transfer",
