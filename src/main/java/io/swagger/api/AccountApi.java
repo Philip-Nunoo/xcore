@@ -54,7 +54,7 @@ public interface AccountApi {
         @Authorization(value = "apiSecret")
     }, tags={ "Account", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Account.class),
+        @ApiResponse(code = 200, message = "OK", response = MandateResponse.class),
         @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
     
     @RequestMapping(value = "/account/{accountId}/mandate",
