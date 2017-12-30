@@ -140,7 +140,7 @@ public interface AccountApi {
         @Authorization(value = "apiSecret")
     }, tags={ "Account", })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Void.class) })
+        @ApiResponse(code = 200, message = "OK", response = TransactionsResponse.class) })
     
     @RequestMapping(value = "/account/{accountId}/transactions",
         method = RequestMethod.GET)
