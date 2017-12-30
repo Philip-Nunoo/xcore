@@ -1,0 +1,1153 @@
+swagger: '2.0'
+info:
+  description: >-
+    This document provides overview of the functionalities x100 API (Application
+    Programming Interface). It clearly spells out the various methods listed
+    below with their request and response in JSON.
+
+    # Introduction
+
+    This API is documented in **OpenAPI format** and is based on specification
+    available on X100 provided by [unionsg.com](http://unionsg.com) team. This
+    API documentation is provided upon the basis that the above institution has
+    provided access and authorization of use.
+
+
+    # Authentication
+
+    X-API offers this forms of authentication:
+      A successful registration requires a **static IP** from the user as well as
+      a generated unique **API_KEY** and **API_SECRET** from the server. The unique keys
+      are sent with every subsequent request from the header. And core(api) would only accept
+      such keys from the registered Static IP in the system.
+
+     - API Key - API Secret created from the server
+     - API SECRET - API Secret created from the server
+    <!-- ReDoc-Inject: <security-definitions> -->
+  version: 1.0.0
+  title: X100 API Core
+  termsOfService: 'http://unionsg.com'
+  contact:
+    email: philip.nunoo@unionsg.com
+  license:
+    name: UNION SG
+host: 'localhost:3000'
+basePath: /api/v1.0
+schemes:
+  - http
+  - https
+x-servers:
+  - url: //test/core/api/v1.0
+    description: Sandbox server
+  - url: //production/core/api/v1.0
+    description: Default server
+paths:
+  /user/login:
+    post:
+      summary: User Login
+      description: Login current user with username and password
+      tags:
+        - User
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: username
+          in: formData
+          description: Username of x100 user
+          required: true
+          type: string
+        - name: password
+          in: formData
+          description: Username of x100 user
+          format: password
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        '404':
+          description: User not Found
+  /customer/{query}/{searchTerm}:
+    get:
+      summary: Get customer information
+      description: Retrieve all customer information
+      tags:
+        - Customer
+      produces:
+        - application/json
+      parameters:
+        - name: query
+          in: path
+          description: Specify the query(phone or id)
+          type: string
+          required: true
+          enum: [id, phone]
+          # schema:
+          #   type: string
+          #   enum: [approved, pending, closed, new]
+        - name: searchTerm
+          in: path
+          type: string
+          required: true
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/CustomerResponse'
+        '401':
+          $ref: '#/responses/UnauthorizedError'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl -X GET \
+            http://localhost:8084/core/api/v1.0/customer/id/119499 \
+        - lang: 'NodeJs'
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url: 'http://localhost:8084/core/api/v1.0/customer/id/119499'
+            };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: 'python'
+          source: |
+            import requests
+
+            url = "http://localhost:8084/core/api/v1.0/customer/id/119499"
+
+            response = requests.request("GET", url)
+
+            print(response.text)
+        - lang: 'php'
+          source: |
+            <?php
+
+            $request = new HttpRequest();
+            $request->setUrl('http://localhost:8084/core/api/v1.0/customer/id/119499');
+            $request->setMethod(HTTP_METH_GET);
+
+            $request->setHeaders(array(
+              'postman-token' => '9a2531bc-5178-f747-f2c3-3bdd0362e75a',
+              'cache-control' => 'no-cache'
+            ));
+
+            try {
+              $response = $request->send();
+
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+        - lang: 'java'
+          source: |
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("http://localhost:8084/core/api/v1.0/customer/id/119499")
+              .get()
+              .build();
+
+            Response response = client.newCall(request).execute();
+
+  '/account/{accountId}':
+    get:
+      summary: Retrieve Account
+      description: Retrieve a user account
+      tags:
+        - Account
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: path
+          description: The account id of the account
+          required: true
+          type: string
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/Account'
+          description: OK
+        '401':
+          $ref: '#/responses/UnauthorizedError'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl -X GET \
+            http://localhost:8084/core/api/v1.0/account/003001119499100248 \
+        - lang: 'NodeJs'
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url: 'http://localhost:8084/core/api/v1.0/account/003001119499100248'
+            };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: 'python'
+          source: |
+            import requests
+
+            url = "http://localhost:8084/core/api/v1.0/account/003001119499100248"
+
+            response = requests.request("GET", url)
+
+            print(response.text)
+        - lang: 'php'
+          source: |
+            <?php
+
+            $request = new HttpRequest();
+            $request->setUrl('http://localhost:8084/core/api/v1.0/account/003001119499100248');
+            $request->setMethod(HTTP_METH_GET);
+
+            try {
+              $response = $request->send();
+
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+        - lang: 'java'
+          source: |
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("http://localhost:8084/core/api/v1.0/account/003001119499100248")
+              .get()
+              .build();
+
+            Response response = client.newCall(request).execute();
+  '/account/{accountId}/mandate':
+    get:
+      summary: Retrieve mandate
+      description: Retrieve mandate detail on a specific account
+      tags:
+        - Account
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: path
+          description: The account id
+          required: true
+          type: string
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/MandateResponse'
+          description: OK
+        '401':
+          $ref: '#/responses/UnauthorizedError'
+  '/account/{accountId}/balance':
+    get:
+      summary: Balance Enquiry
+      description: Retrieve the balance on a specific account
+      tags:
+        - Account
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: path
+          description: The account id of the account
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/Balance'
+          description: OK
+        '401':
+          $ref: '#/responses/UnauthorizedError'
+      x-code-samples:
+        - lang: 'cURL'
+          source: |
+            curl -X GET \
+            http://localhost:8084/core/api/v1.0/account/003001119499100248/balance
+        - lang: 'NodeJs'
+          source: |
+            var request = require("request");
+
+            var options = { method: 'GET',
+              url: 'http://localhost:8084/core/api/v1.0/account/003001119499100248/balance'
+            };
+
+            request(options, function (error, response, body) {
+              if (error) throw new Error(error);
+
+              console.log(body);
+            });
+        - lang: 'python'
+          source: |
+            import requests
+
+            url = "http://localhost:8084/core/api/v1.0/account/003001119499100248/balance"
+
+            response = requests.request("GET", url)
+
+            print(response.text)
+        - lang: 'php'
+          source: |
+            <?php
+
+            $request = new HttpRequest();
+            $request->setUrl('http://localhost:8084/core/api/v1.0/account/003001119499100248/balance');
+            $request->setMethod(HTTP_METH_GET);
+
+            try {
+              $response = $request->send();
+
+              echo $response->getBody();
+            } catch (HttpException $ex) {
+              echo $ex;
+            }
+        - lang: 'java'
+          source: |
+            OkHttpClient client = new OkHttpClient();
+
+            Request request = new Request.Builder()
+              .url("http://localhost:8084/core/api/v1.0/account/003001119499100248/balance")
+              .get()
+              .addHeader("content-type", "application/x-www-form-urlencoded")
+              .build();
+
+            Response response = client.newCall(request).execute();
+  '/account/{accountId}/transactions':
+    get:
+      summary: Get User transaction
+      description: >-
+        Get User transaction. Returns last 5 transactions if no or **startDate**
+        and **endDate** is specified
+      tags:
+        - Account
+      parameters:
+        - name: accountId
+          in: path
+          description: The account id of the account
+          required: true
+          type: integer
+          format: int64
+        - name: startDate
+          in: query
+          required: false
+          type: string
+        - name: endDate
+          in: query
+          required: false
+          type: string
+        - name: limit
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          schema:
+            $ref: '#/definitions/TransactionsResponse'
+          description: OK
+  '/account/{accountId}/withdrawal':
+    put:
+      summary: Withdraw money
+      description: Withdraw money from an account
+      tags:
+        - Account
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: path
+          description: The account id of the account
+          required: true
+          type: integer
+          format: int64
+        - name: amount
+          in: formData
+          description: Amount to deposit
+          required: true
+          type: integer
+          format: int64
+        - name: documentRef
+          in: formData
+          description: The reference number for the deposit
+          required: true
+          type: integer
+          format: int64
+        - name: batchNo
+          in: formData
+          description: Leave blank if possible
+          required: false
+          type: integer
+          format: int64
+        - name: narration
+          in: formData
+          required: true
+          type: integer
+          format: string
+        - name: postBy
+          description: The core user making deposit
+          in: formData
+          required: false
+          type: integer
+          format: string
+        - name: appBy
+          in: formData
+          description: If the it needs approval
+          required: false
+          type: integer
+          format: string
+        - name: customerTel
+          in: formData
+          description: The telephone number of depositor
+          required: false
+          type: integer
+          format: string
+        - name: transBy
+          in: formData
+          description: The name of the person performing the transaction
+          required: false
+          type: integer
+          format: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        '401':
+          $ref: '#/responses/UnauthorizedError'
+  '/account/{accountId}/deposit':
+    put:
+      summary: Deposit amount into account
+      description: Make deposit on account
+      tags:
+        - Account
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: path
+          description: The account id of the account
+          required: true
+          type: integer
+          format: int64
+        - name: amount
+          in: formData
+          description: Amount to deposit
+          required: true
+          type: integer
+          format: int64
+        - name: documentRef
+          in: formData
+          description: The reference number for the deposit
+          required: true
+          type: integer
+          format: int64
+        - name: batchNo
+          in: formData
+          description: Leave blank if possible
+          required: false
+          type: integer
+          format: int64
+        - name: narration
+          in: formData
+          required: true
+          type: integer
+          format: string
+        - name: postBy
+          description: The core user making deposit
+          in: formData
+          required: false
+          type: integer
+          format: string
+        - name: appBy
+          in: formData
+          description: If the it needs approval
+          required: false
+          type: integer
+          format: string
+        - name: customerTel
+          in: formData
+          description: The telephone number of depositor
+          required: false
+          type: integer
+          format: string
+        - name: transBy
+          in: formData
+          description: The name of the person performing the transaction
+          required: false
+          type: integer
+          format: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        '401':
+          $ref: '#/responses/UnauthorizedError'
+  '/account/{accountId}/transfer':
+    put:
+      summary: Fund Transfer (Same bank)
+      description: Transfer money between bank accounts. (Same bank)
+      tags:
+        - Account
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: path
+          description: The account id of the account to debit
+          required: true
+          type: string
+        - name: destinationAccountId
+          in: formData
+          description: The destination account to credit
+          required: true
+          type: string
+        - name: amount
+          in: formData
+          description: Amount to transfer
+          required: true
+          type: string
+        - name: documentRef
+          in: formData
+          description: The document Ref
+          required: true
+          type: string
+        - name: narration
+          in: formData
+          description: Narration for the transfer
+          required: true
+          type: string
+        - name: postBy
+          in: formData
+          description: The user posting transaction
+          required: true
+          type: string
+        - name: appBy
+          in: formData
+          description: Indicate if approval needed
+          required: false
+          type: string
+        - name: postTerminal
+          in: formData
+          description: The terminal of the transaction(To be deprecated)
+          required: true
+          type: string
+        - name: customerTel
+          in: formData
+          description: The phone number of the customer(making transfer)
+          required: true
+          type: string
+        - name: transBy
+          in: formData
+          description: The name of the person performing transaction
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/AccountPostingResponse'
+  /request/atm:
+    post:
+      summary: Service Request(ATM)
+      description: Request for an atm from core
+      tags:
+        - Request
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: formData
+          required: true
+          type: string
+          format: string
+        - name: displayName
+          in: formData
+          required: true
+          type: string
+          format: string
+        - name: deliveryMethod
+          in: formData
+          required: true
+          type: string
+          format: string
+        - name: cardType
+          in: formData
+          required: true
+          type: string
+          format: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ApiSuccessResponse'
+  /request/sms:
+    post:
+      summary: Service Request(SMS)
+      description: Request for sms from core
+      tags:
+        - Request
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: serviceType
+          in: formData
+          required: true
+          type: string
+        - name: bbanNumber
+          in: formData
+          required: true
+          type: string
+        - name: currencyCode
+          in: formData
+          required: true
+          type: string
+        - name: phoneNumber
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ApiSuccessResponse'
+  /request/email:
+    post:
+      summary: Service Request(Email)
+      description: Request for email from core
+      tags:
+        - Request
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: formData
+          required: true
+          type: string
+        - name: emailAddress
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ApiSuccessResponse'
+  /request/cheque-book:
+    post:
+      summary: Service Request(Cheque book)
+      description: Request for cheque book from core
+      tags:
+        - Request
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: formData
+          required: true
+          type: string
+        - name: currency
+          in: formData
+          required: true
+          type: string
+        - name: docNumber
+          description: The document number
+          in: formData
+          required: true
+          type: string
+        - name: leaves
+          description: Number of leaves
+          in: formData
+          required: true
+          type: string
+        - name: deliveryChannel
+          in: formData
+          required: true
+          type: string
+        - name: deliveryBranch
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ApiSuccessResponse'
+  /request/stop-check:
+    post:
+      summary: Service Request(Stop Check)
+      description: Request for stop a check from core
+      tags:
+        - Request
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - name: accountId
+          in: formData
+          required: true
+          type: string
+        - name: chequeNumber
+          in: formData
+          required: true
+          type: string
+        - name: reason
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ApiSuccessResponse'
+definitions:
+  Response:
+    type: object
+    properties:
+      responseCode:
+        type: integer
+      message:
+        type: string
+  AccountPostingResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      responseCode:
+        type: integer
+  TransactionsResponse:
+    type: object
+    properties:
+      length:
+        type: integer
+      message:
+        type: string
+      responseCode:
+        type: integer
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/Transaction'
+  Transaction:
+    type: object
+    properties:
+      acctLink:
+        type: string
+        description: The account affected
+      amt:
+        type: string
+        description: The amount for the transaction
+      amtSign:
+        type: string
+        description: Indicates whether debit or credit
+      curreny:
+        type: string
+      documentRef:
+        type: string
+      postingDate:
+        type: string
+      transactionDetails:
+        type: string
+  AccountResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      responseCode:
+        type: integer
+      account:
+        $ref: '#/definitions/Account'
+  CustomerResponse:
+    type: object
+    properties:
+      message:
+        type: string
+      responseCode:
+        type: integer
+      length:
+        type: integer
+      customers:
+        type: array
+        items:
+          $ref: '#/definitions/Customer'
+  Account:
+    type: object
+    properties:
+      acctLink:
+        type: string
+      acctName:
+        type: string
+      currency:
+        type: string
+      product:
+        type: string
+      customerNumber:
+        type: string
+      customerName:
+        type: string
+      balance:
+        $ref: '#/definitions/Balance'
+    example:
+      acctLink: 003001119499110142
+      acctName: UNITED SYSTEMS GLOBAL LTD
+      currency: SLL
+      product: CURRENT ACCOUNT - BUSINESS
+      customerNumber: '119499'
+      customerName: UNION SYSTEMS GLOBAL LTD
+      balance:
+        product: CURRENT ACCOUNT - BUSINESS
+        accountName: UNITED SYSTEMS GLOBAL LTD
+        noOfHolder: '1'
+        brCode: SIAKA STEVENS STREET
+        riskCode: LOW RISK
+        blkAmt: '0'
+        odAmount: '0'
+        lienAmt: ''
+        avBalance: '1607182.43'
+        avBalanceSsh: '***'
+        bkBalance: '1607182.43'
+        bkBalSsh: '***'
+        lastDBTransDate: 31-MAY-17
+        lastCDTransDate: 24-MAY-17
+        statusDesc: NORMAL
+        statusCode: 'N'
+
+
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+      branch:
+        type: string
+      sessionId:
+        type: string
+      hostname:
+        type: string
+      machineIp:
+        type: string
+      transEnq:
+        type: string
+      department:
+        type: string
+      ac:
+        type: string
+      subBranch:
+        type: string
+      employeeId:
+        type: string
+        
+  MandateResponse:
+    type: object
+    properties:
+      mandates: 
+        type: array
+        items:
+          $ref: '#/definitions/Mandate'
+      message:
+        type: string
+      responseCode: 
+        type: integer
+  Mandate:
+    type: object
+    properties:
+      accountname: 
+        type: string
+      photograph:
+        type: string
+      signature:
+        type: string
+      
+  Statements:
+    type: object
+    properties:
+      accountId:
+        type: integer
+        description: The user account id
+        format: int64
+      ledgerBalance:
+        type: integer
+        description: The ledger Balance
+        format: int64
+      availableBalance:
+        type: integer
+        description: The available Balance on the account.
+        format: int64
+      currencyCode:
+        type: string
+        description: The currency code
+      accountType:
+        type: string
+        description: The account type
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/Statement'
+  Statement:
+    type: object
+    properties:
+      date:
+        type: string
+        format: string
+      sequenceNumber:
+        type: string
+        format: string
+      transactionType:
+        type: string
+        format: string
+      accountId:
+        type: string
+        format: string
+      amount:
+        type: string
+        description: Transaction amount
+        format: string
+      currencyCode:
+        type: string
+        description: The currency code of the transaction
+
+  Balance:
+    type: object
+    properties:
+      accountName:
+        type: string
+      avBalance:
+        type: string
+      avBalanceSsh:
+        type: string
+      bkBalance:
+        type: string
+      bkBalSsh:
+        type: string
+      blkAmt:
+        type: string
+      brCode:
+        type: string
+      lastCDTransDate:
+        type: string
+      lastDBTransDate:
+        type: string
+      lienAmt:
+        type: string
+      noOfHolder:
+        type: string
+      odAmount:
+        type: string
+      product:
+        type: string
+      riskCode:
+        type: string
+      statusCode:
+        type: string
+      statusDesc:
+        type: string
+    example:
+      accountName: UNITED SYSTEMS GLOBAL LTD
+      avBalance: '1607182.43'
+      avBalanceSsh: '***'
+      bkBalance: '1607182.43'
+      blkAmt: '0'
+      brCode: SIAKA STEVENS STREET
+      lastCDTransDate: 24-MAY-17
+      lastDBTransDate: 31-MAY-17
+      lienAmt: ''
+      noOfHolder: '1'
+      odAmount: '0'
+      product: CURRENT ACCOUNT - BUSINESS
+      riskCode: LOW RISK
+      bkBalSsh: '***'
+      statusCode: 'N'
+      statusDesc: NORMAL
+    xml:
+      name: Order
+
+  Customer:
+    type: object
+    properties:
+      customerNumber:
+        type: string
+      branchName:
+        type: string
+      branchCode:
+        type: string
+      address1:
+        type: string
+      address2:
+        type: string
+      customerName:
+        type: string
+      description:
+        type: string
+      nationality:
+        type: string
+      phone:
+        type: string
+      gender:
+        type: string
+      zipCode:
+        type: string
+      mess:
+        type: string
+      email:
+        type: string
+      accounts:
+        type: array
+        items:
+          $ref: '#/definitions/Account'
+    example:
+      length: 0
+      message: Success
+      responseCode: 200
+      customers:
+        - customerNumber: '119499'
+          branchName: SIAKA STEVENS STREET
+          branchCode: '001'
+          address1: 126 CIRCULAR ROAD
+          address2: FREETOWN
+          customerName: UNION SYSTEMS GLOBAL LTD
+          description: SIERRA LEONE
+          nationality: SLE
+          phone: null
+          gender: null
+          zipCode: null
+          mess: null
+          email: null
+          custPhoneNumber: null
+          accounts:
+            - acctLink: 003001119499110142
+              acctName: UNITED SYSTEMS GLOBAL LTD
+              currency: SLL
+              product: CURRENT ACCOUNT - BUSINESS
+              customerNumber: '119499'
+              customerName: UNION SYSTEMS GLOBAL LTD
+              balance:
+                product: CURRENT ACCOUNT - BUSINESS
+                accountName: UNITED SYSTEMS GLOBAL LTD
+                noOfHolder: '1'
+                brCode: SIAKA STEVENS STREET
+                riskCode: LOW RISK
+                blkAmt: '0'
+                odAmount: '0'
+                lienAmt: ''
+                avBalance: '1607182.43'
+                avBalanceSsh: '***'
+                bkBalance: '1607182.43'
+                bkBalSsh: '***'
+                lastDBTransDate: 31-MAY-17
+                lastCDTransDate: 24-MAY-17
+                statusDesc: NORMAL
+                statusCode: 'N'
+            - acctLink: 003001119499100248
+              acctName: UNION SYSTEMS GLOBAL LTD
+              currency: USD
+              product: CURRENT ACCOUNT - PERSONAL
+              customerNumber: '119499'
+              customerName: UNION SYSTEMS GLOBAL LTD
+              balance:
+                product: CURRENT ACCOUNT - PERSONAL
+                accountName: UNION SYSTEMS GLOBAL LTD
+                noOfHolder: '1'
+                brCode: SIAKA STEVENS STREET
+                riskCode: LOW RISK
+                blkAmt: '0'
+                odAmount: '0'
+                lienAmt: ''
+                avBalance: '530142.24'
+                avBalanceSsh: '***'
+                bkBalance: '530142.24'
+                bkBalSsh: '***'
+                lastDBTransDate: 08-JUN-17
+                lastCDTransDate: 07-JUN-17
+                statusDesc: NORMAL
+                statusCode: 'N'
+
+    xml:
+      name: Category
+  ApiSuccessResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+securityDefinitions:
+  apiKey:
+    type: apiKey
+    in: header
+    description: Api key generated and stored by third-parties for authorizations.
+    name: X-API-KEY
+  apiSecret:
+    type: apiKey
+    in: header
+    description: Api secret generated and stored by third-parties for authorizations.
+    name: X-API-SECRET
+
+security:
+  - apiKey: []
+    apiSecret: []
+
+x-tagGroups:
+  - name: User management
+    description: General Items
+    tags:
+      - User
+  - name: Request
+    tags:
+      - Customer
+      - Account
+  - name: General
+    tags:
+      - Request
+responses:
+  UnauthorizedError:
+    description: API key is missing or invalid
+    headers:
+      WWW_Authenticate:
+        type: string
+tags:
+  - name: User
+    description: >-
+      Institutions' users or employees register on x100
+  - name: Customer
+    description: >-
+      Customers of a bank with various bank accounts. This describes in general
+      all api endpoints and access for a customer.
+  - name: Account
+    description: >-
+      The account associated with a customer and various information about the
+      account.
+  - name: Request
+    description: Actions for a user account
+externalDocs:
+  description: Find out more
+  url: 'http://unionsg.com'

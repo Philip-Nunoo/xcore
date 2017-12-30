@@ -1,0 +1,11 @@
+{
+  "name": "x100-api-webapp",
+  "version": "1.0.0",
+  "description": "Api detail for x100",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Philip A. Nunoo",
+  "license": "ISC"
+}
