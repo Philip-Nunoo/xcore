@@ -427,7 +427,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Response'
+            $ref: '#/definitions/AccountPostingResponse'
         '401':
           $ref: '#/responses/UnauthorizedError'
   '/account/{accountId}/deposit':
@@ -498,7 +498,7 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Response'
+            $ref: '#/definitions/AccountPostingResponse'
         '401':
           $ref: '#/responses/UnauthorizedError'
   '/account/{accountId}/transfer':
@@ -730,13 +730,6 @@ paths:
           schema:
             $ref: '#/definitions/ApiSuccessResponse'
 definitions:
-  Response:
-    type: object
-    properties:
-      responseCode:
-        type: integer
-      message:
-        type: string
   AccountPostingResponse:
     type: object
     properties:
@@ -777,15 +770,6 @@ definitions:
         type: string
       transactionDetails:
         type: string
-  AccountResponse:
-    type: object
-    properties:
-      message:
-        type: string
-      responseCode:
-        type: integer
-      account:
-        $ref: '#/definitions/Account'
   CustomerResponse:
     type: object
     properties:
@@ -886,55 +870,6 @@ definitions:
         type: string
       signature:
         type: string
-      
-  Statements:
-    type: object
-    properties:
-      accountId:
-        type: integer
-        description: The user account id
-        format: int64
-      ledgerBalance:
-        type: integer
-        description: The ledger Balance
-        format: int64
-      availableBalance:
-        type: integer
-        description: The available Balance on the account.
-        format: int64
-      currencyCode:
-        type: string
-        description: The currency code
-      accountType:
-        type: string
-        description: The account type
-      transactions:
-        type: array
-        items:
-          $ref: '#/definitions/Statement'
-  Statement:
-    type: object
-    properties:
-      date:
-        type: string
-        format: string
-      sequenceNumber:
-        type: string
-        format: string
-      transactionType:
-        type: string
-        format: string
-      accountId:
-        type: string
-        format: string
-      amount:
-        type: string
-        description: Transaction amount
-        format: string
-      currencyCode:
-        type: string
-        description: The currency code of the transaction
-
   Balance:
     type: object
     properties:
