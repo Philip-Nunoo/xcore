@@ -124,10 +124,10 @@ public interface AccountApi {
         method = RequestMethod.PUT)
     ResponseEntity<AccountPostingResponse> accountAccountIdTransferPut(
             @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
-            @ApiParam(value = "The destination account id of the account",required=true ) @PathVariable("destinationAccountId") String destinationAccountId,
+            @ApiParam(value = "The destination account id of the account", required=true) @RequestParam("destinationAccountId") String destinationAccountId,
             @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
             @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
-            @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
+            @ApiParam(value = "The transaction narration", required=true) @RequestParam(value="narration", required=true)  String narration,
             @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
             @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
             @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,

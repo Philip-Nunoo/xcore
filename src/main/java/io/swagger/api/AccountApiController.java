@@ -211,8 +211,8 @@ public class AccountApiController implements AccountApi {
 
     @Override
     public ResponseEntity<AccountPostingResponse> accountAccountIdTransferPut(
-            @ApiParam(value = "The account to debit",required=true ) @PathVariable("accountId") String accountId,
-            @ApiParam(value = "The account to credit",required=true ) @PathVariable("destinationAccountId") String destinationAccountId,
+            @ApiParam(value = "The account to debit", required=true ) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "The account to credit", required=true) @RequestParam("destinationAccountId") String destinationAccountId,
             @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
             @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
@@ -221,18 +221,15 @@ public class AccountApiController implements AccountApi {
             @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
             @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
             @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy) {
-        
-        
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
         AccountPostingResponse response = null;
         
         try {
-            System.out.println(accountId);
             AccountCall accountCall = new AccountCall(accountId);
             
             TransactionPosting acr = accountCall.transferFunds(
-                    accountId, 
-                    destinationAccountId, 
+                    destinationAccountId,
+                    accountId,                     
                     Float.parseFloat(amount), 
                     narration, 
                     documentRef, 
