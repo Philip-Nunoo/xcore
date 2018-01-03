@@ -242,7 +242,7 @@ public class AccountApiController implements AccountApi {
             
             httpStatus = acr.isResponse() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
             
-            response = new AccountPostingResponse(httpStatus.value(), acr.getMessage());
+            response = new AccountPostingResponse(acr.getTransactionStatusCode(), acr.getMessage());
             
         } catch (SQLException ex) {
             Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);

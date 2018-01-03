@@ -13,21 +13,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class AccountPostingResponse {
     @JsonProperty("responseCode")
-    private int responseCode;
+    private double responseCode;
     
     @JsonProperty("message")
     private String message;
 
-    public AccountPostingResponse(int responseCode, String message) {        
+    public AccountPostingResponse(double responseCode, String message) {        
         this.responseCode = responseCode;
         this.message = message;
     }
     
-    public int getResponseCode() {
+    public double getResponseCode() {
         return responseCode;
     }
 
-    public void setResponseCode(int responseCode) {
+    public void setResponseCode(double responseCode) {
         this.responseCode = responseCode;
     }
 
