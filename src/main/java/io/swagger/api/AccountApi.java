@@ -12,143 +12,159 @@ import io.swagger.annotations.*;
 import io.swagger.model.AccountPostingResponse;
 import io.swagger.model.MandateResponse;
 import io.swagger.model.TransactionsResponse;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T09:55:07.361Z")
 
 @Api(value = "account", description = "the account API")
 public interface AccountApi {
 
     @ApiOperation(value = "Retrieve Account", notes = "Retrieve details on a specific account", response = Account.class, authorizations = {
-        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiKey")
+        ,
         @Authorization(value = "apiSecret")
-    }, tags={ "Account", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Account.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
-    
-    @RequestMapping(value = "/account/{accountId}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<Account> retrieveAccount(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId);
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = Account.class)
+        ,
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)})
 
+    @RequestMapping(value = "/account/{accountId}",
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<Account> retrieveAccount(
+            @ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId
+    );
 
     @ApiOperation(value = "Retrieve Account", notes = "Retrieve details on a specific account", response = Account.class, authorizations = {
-        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiKey")
+        ,
         @Authorization(value = "apiSecret")
-    }, tags={ "Account", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Balance.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
-    
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = Balance.class)
+        ,
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)})
+
     @RequestMapping(value = "/account/{accountId}/balance",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<Balance> retrieveAccountBalance(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId);
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<Balance> retrieveAccountBalance(@ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId);
 
     @ApiOperation(value = "Retrieve Account mandate", notes = "Retrieve mandate details on a specific account", response = MandateResponse.class, authorizations = {
-        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiKey")
+        ,
         @Authorization(value = "apiSecret")
-    }, tags={ "Account", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = MandateResponse.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
-    
-    @RequestMapping(value = "/account/{accountId}/mandate",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<MandateResponse> retrieveAccountMandate(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId);
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = MandateResponse.class)
+        ,
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)})
 
+    @RequestMapping(value = "/account/{accountId}/mandate",
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<MandateResponse> retrieveAccountMandate(@ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId);
 
     @ApiOperation(value = "Deposit amount into account", notes = "Make deposit on account", response = Balance.class, authorizations = {
-        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiKey")
+        ,
         @Authorization(value = "apiSecret")
-    }, tags={ "Account", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = AccountPostingResponse.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
-    
-    @RequestMapping(value = "/account/{accountId}/deposit",
-        produces = { "application/json" }, 
-        consumes = { "application/x-www-form-urlencoded" },
-        method = RequestMethod.PUT)
-    ResponseEntity<AccountPostingResponse> accountAccountIdDepositPut(
-            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
-            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
-            @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
-            @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
-            @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
-            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
-            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
-            @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
-            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy);
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = AccountPostingResponse.class)
+        ,
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)})
 
-    
+    @RequestMapping(value = "/account/{accountId}/deposit",
+            produces = {"application/json"},
+            consumes = {"application/x-www-form-urlencoded"},
+            method = RequestMethod.PUT)
+    ResponseEntity<AccountPostingResponse> accountAccountIdDepositPut(
+            @ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "Amount to deposit", required = true) @RequestParam(value = "amount", required = true) String amount,
+            @ApiParam(value = "The documentRef", required = true) @RequestParam(value = "documentRef", required = true) String documentRef,
+            @ApiParam(value = "The transaction narration") @RequestParam(value = "narration", required = true) String narration,
+            @ApiParam(value = "The the teller posting transaction") @RequestParam(value = "postBy", required = false) String postBy,
+            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value = "appBy", required = false) String appBy,
+            @ApiParam(value = "The customerTelephone") @RequestParam(value = "customerTel", required = false) String customerTel,
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value = "transBy", required = false) String transBy,
+            HttpServletRequest request
+    );
+
     @ApiOperation(value = "Withdraw money", notes = "Withdraw money from an account", response = Balance.class, authorizations = {
-        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiKey")
+        ,
         @Authorization(value = "apiSecret")
-    }, tags={ "Account", })    
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = AccountPostingResponse.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
-    
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = AccountPostingResponse.class)
+        ,
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)})
+
     @RequestMapping(value = "/account/{accountId}/withdraw",
-        produces = { "application/json" }, 
-        consumes = { "application/x-www-form-urlencoded" },
-        method = RequestMethod.PUT)
+            produces = {"application/json"},
+            consumes = {"application/x-www-form-urlencoded"},
+            method = RequestMethod.PUT)
     ResponseEntity<AccountPostingResponse> accountAccountIdWithdrawalPut(
-            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
-            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
-            @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
-            @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
-            @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
-            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
-            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
-            @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
-            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy);
-    
+            @ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "Amount to deposit", required = true) @RequestParam(value = "amount", required = true) String amount,
+            @ApiParam(value = "The documentRef", required = true) @RequestParam(value = "documentRef", required = true) String documentRef,
+            @ApiParam(value = "The transaction narration") @RequestParam(value = "narration", required = true) String narration,
+            @ApiParam(value = "The the teller posting transaction") @RequestParam(value = "postBy", required = false) String postBy,
+            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value = "appBy", required = false) String appBy,
+            @ApiParam(value = "The customerTelephone") @RequestParam(value = "customerTel", required = false) String customerTel,
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value = "transBy", required = false) String transBy,
+            HttpServletRequest request
+    );
+
     @ApiOperation(value = "Transfer funds", notes = "Transfer money from an account to another. (Same bank)", response = Balance.class, authorizations = {
-        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiKey")
+        ,
         @Authorization(value = "apiSecret")
-    }, tags={ "Account", })    
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = AccountPostingResponse.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
-    
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = AccountPostingResponse.class)
+        ,
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)})
+
     @RequestMapping(value = "/account/{accountId}/transfer",
-        produces = { "application/json" }, 
-        consumes = { "application/x-www-form-urlencoded" },
-        method = RequestMethod.PUT)
+            produces = {"application/json"},
+            consumes = {"application/x-www-form-urlencoded"},
+            method = RequestMethod.PUT)
     ResponseEntity<AccountPostingResponse> accountAccountIdTransferPut(
-            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
-            @ApiParam(value = "The destination account id of the account", required=true) @RequestParam("destinationAccountId") String destinationAccountId,
-            @ApiParam(value = "Amount to deposit", required=true) @RequestParam(value="amount", required=true)  String amount,
-            @ApiParam(value = "The documentRef", required=true) @RequestParam(value="documentRef", required=true)  String documentRef,
-            @ApiParam(value = "The transaction narration", required=true) @RequestParam(value="narration", required=true)  String narration,
-            @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
-            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
-            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
-            @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
-            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy);
-    
+            @ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "The destination account id of the account", required = true) @RequestParam("destinationAccountId") String destinationAccountId,
+            @ApiParam(value = "Amount to deposit", required = true) @RequestParam(value = "amount", required = true) String amount,
+            @ApiParam(value = "The documentRef", required = true) @RequestParam(value = "documentRef", required = true) String documentRef,
+            @ApiParam(value = "The transaction narration", required = true) @RequestParam(value = "narration", required = true) String narration,
+            @ApiParam(value = "The the teller posting transaction") @RequestParam(value = "postBy", required = false) String postBy,
+            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value = "appBy", required = false) String appBy,
+            @ApiParam(value = "The customerTelephone") @RequestParam(value = "customerTel", required = false) String customerTel,
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value = "transBy", required = false) String transBy,
+            HttpServletRequest request
+    );
 
     @ApiOperation(value = "Get User transaction", notes = "Get User transaction. Returns last 5 transactions if no or **startDate** and **endDate** is specified", response = Void.class, authorizations = {
-        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiKey")
+        ,
         @Authorization(value = "apiSecret")
-    }, tags={ "Account", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = TransactionsResponse.class) })
-    
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = TransactionsResponse.class)})
+
     @RequestMapping(value = "/account/{accountId}/transactions",
-        method = RequestMethod.GET)
+            method = RequestMethod.GET)
     ResponseEntity<TransactionsResponse> accountAccountIdTransactionsGet(
-            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId,
             @ApiParam(value = "") @RequestParam(value = "startDate", required = false) String startDate,
             @ApiParam(value = "") @RequestParam(value = "endDate", required = false) String endDate,
             @ApiParam(value = "") @RequestParam(value = "limit", required = false) Integer limit
     );
-    
+
 }

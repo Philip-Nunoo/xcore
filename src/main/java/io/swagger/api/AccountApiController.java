@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,9 +67,11 @@ public class AccountApiController implements AccountApi {
     }
 
     @Override
-    public ResponseEntity<Account> retrieveAccount(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId) {
+    public ResponseEntity<Account> retrieveAccount(
+            @ApiParam(value = "The account id of the account", required=true) @PathVariable("accountId") String accountId
+    ) {
         ResponseEntity<Account> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        
+                
         try {
             AccountCall accountCall = new AccountCall(accountId);
             
@@ -112,17 +115,19 @@ public class AccountApiController implements AccountApi {
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
             @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
             @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
-            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
             @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
-            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy) {
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy,
+            HttpServletRequest request
+    ) {
         // do some magic!
         
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
         AccountPostingResponse response = null;
         
         try {
-            System.out.println(accountId);
             AccountCall accountCall = new AccountCall(accountId);
+        
+            String postTerminal = request.getAttribute("terminal").toString();
             
             // Todo: should add balance in account posting response
             TransactionPosting acr = accountCall.depositMoney(
@@ -165,13 +170,15 @@ public class AccountApiController implements AccountApi {
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
             @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
             @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
-            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
             @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
-            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy) {
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy,
+            HttpServletRequest request
+    ) {
         // do some magic!
         
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
         AccountPostingResponse response = null;
+        String postTerminal = request.getAttribute("terminal").toString();
         
         try {
             System.out.println(accountId);
@@ -218,12 +225,14 @@ public class AccountApiController implements AccountApi {
             @ApiParam(value = "The transaction narration") @RequestParam(value="narration", required=true)  String narration,
             @ApiParam(value = "The the teller posting transaction") @RequestParam(value="postBy", required=false)  String postBy,
             @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value="appBy", required=false)  String appBy,
-            @ApiParam(value = "The the terminal of the transaction") @RequestParam(value="postTerminal", required=false)  String postTerminal,
             @ApiParam(value = "The customerTelephone") @RequestParam(value="customerTel", required=false)  String customerTel,
-            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy) {
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value="transBy", required=false)  String transBy,
+            HttpServletRequest request
+    ) {
         HttpStatus httpStatus = HttpStatus.NOT_FOUND;
         AccountPostingResponse response = null;
         
+        String postTerminal = request.getAttribute("terminal").toString();
         try {
             AccountCall accountCall = new AccountCall(accountId);
             
