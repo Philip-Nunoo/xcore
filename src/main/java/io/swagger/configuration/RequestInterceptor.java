@@ -6,6 +6,7 @@
 package io.swagger.configuration;
 
 import com.union.corelogger.RequestLog;
+import envtest.Helpers;
 import envtest.model.ApiClient;
 import envtest.proc.ApiClientCall;
 import io.swagger.Config;
@@ -49,10 +50,13 @@ public class RequestInterceptor implements HandlerInterceptor {
         String requestUrl = request.getRequestURL().toString();
         String method = request.getMethod();
 
+        System.out.println("requestUri " + requestUri.substring(0));
+        
+        String[] apiResource = requestUri.replace("/core/api/v1.0/", "").split("/");
+        
         if (requestUri.contains("swagger") || requestUri.contains("api-docs")) { // allow swagger request
             return true;
-        } else {
-            System.out.println("serverIp " + ipAddr);
+        } else {            
             ApiClientCall apiClientCall = new ApiClientCall();
             ApiClient apiClient = apiClientCall.ApiClientCheck(apiKey, apiSecret, ipAddr);
 
@@ -60,14 +64,19 @@ public class RequestInterceptor implements HandlerInterceptor {
             String directoryPath = (Config.SERVER_DEV_PORT == request.getLocalPort())
                     ? "C://xcore-dev/requests/"
                     : "C://xcore/requests/";
+            directoryPath = Helpers.isUnix() ? "/opt/api/logs/" : directoryPath;
 
             String fileName = directoryPath + "request." + com.union.corelogger.Helper.currentDateTime("yyyy-MM-dd") + ".csv";
             System.out.format("REQ %s >> ~ (%s) %s%s%n", method, Helper.currentDateTime(), ipAddr, requestUrl);
-
-            // RequestLog.request(fileName, serverIp, "TODO", method, requestUrl, "TODO - body");
+            
+            String resource = (apiResource.length > 0) ? apiResource[0] : "Unidentified Resource";
+            
             if (apiClient != null) {
+                String nameOfClient = apiClient.getApiRqstrnme();
+                RequestLog.request(fileName, ipAddr, nameOfClient, method, requestUrl, resource, requestUri.replace("/core/api/v1.0/", ""));
+                
                 request.setAttribute("terminal", apiClient.getTerminal());
-
+                
                 if (requestUri.contains("user") && apiClient.getUser_endpt().equals("Y")) {
                     return true;
                 }
@@ -85,6 +94,7 @@ public class RequestInterceptor implements HandlerInterceptor {
             } else {
                 // TODO: Log unauthorized attempt and IP
                 System.out.println("Could not find the requested server.");
+                RequestLog.request(fileName, ipAddr, "Unknown Client", method, requestUrl, resource, requestUri.replace("/core/api/v1.0/", ""));
                 return false;
             }
 
