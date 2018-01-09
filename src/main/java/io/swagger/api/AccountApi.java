@@ -33,8 +33,8 @@ public interface AccountApi {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = Account.class),
         @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class),
-        @ApiResponse(code = 404, message = "Account not found", response = NotFound.class)}
-    )
+        @ApiResponse(code = 404, message = "Account not found", response = NotFound.class)
+    })
 
     @RequestMapping(value = "/account/{accountId}",
             produces = {"application/json"},
@@ -49,14 +49,15 @@ public interface AccountApi {
         @Authorization(value = "apiSecret")
     }, tags = {"Account",})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = Balance.class)
-        ,
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)})
+        @ApiResponse(code = 200, message = "OK", response = Balance.class),
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class),
+        @ApiResponse(code = 404, message = "Account not found", response = NotFound.class)
+    })
 
     @RequestMapping(value = "/account/{accountId}/balance",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<Balance> retrieveAccountBalance(@ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId);
+    ResponseEntity<Object> retrieveAccountBalance(@ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId);
 
     @ApiOperation(value = "Retrieve Account mandate", notes = "Retrieve mandate details on a specific account", response = MandateResponse.class, authorizations = {
         @Authorization(value = "apiKey")

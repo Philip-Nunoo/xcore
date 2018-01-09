@@ -88,16 +88,18 @@ public class AccountApiController implements AccountApi {
     }
     
     @Override
-    public ResponseEntity<Balance> retrieveAccountBalance(@ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId) {
-        ResponseEntity<Balance> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<Object> retrieveAccountBalance(
+            @ApiParam(value = "The account id of the account",required=true ) @PathVariable("accountId") String accountId
+    ) {
+        ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
         
         try {
             // do some magic!
             AccountCall accountCall = new AccountCall(accountId);
             envtest.model.Balance balance = accountCall.getAccountBalance();
             
-            response = (ResponseEntity<Balance>) ( balance == null ? 
-                    new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+            response = (ResponseEntity<Object>) ( balance == null ? 
+                    new ResponseEntity<>(new NotFound(HttpStatus.NOT_FOUND.value(), "Account not found"), HttpStatus.NOT_FOUND) :
                     new ResponseEntity<>(balance, HttpStatus.OK));
         } catch (SQLException ex) {
             Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
