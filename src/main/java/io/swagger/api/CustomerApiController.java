@@ -5,6 +5,7 @@ import io.swagger.model.Customer;
 
 import io.swagger.annotations.*;
 import io.swagger.model.CustomerResponse;
+import io.swagger.model.NotFound;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -21,69 +22,46 @@ import java.util.logging.Logger;
 public class CustomerApiController implements CustomerApi {
 
     @Override
-    public ResponseEntity<CustomerResponse> customerQuerySearchTermGet(@ApiParam(value = "",required=true ) @PathVariable("query") String query,
-        @ApiParam(value = "",required=true ) @PathVariable("searchTerm") String searchTerm) {
-        CustomerResponse customerResponse = new CustomerResponse();
-        
-        customerResponse.setMessage("Customer not found");
-        HttpStatus responseCode = HttpStatus.NOT_FOUND;
-        customerResponse.setResponseCode(responseCode.value());
-        
-        ResponseEntity<CustomerResponse> response = new ResponseEntity<>(customerResponse, responseCode);
-                
+    public ResponseEntity<Object> customerQuerySearchTermGet(
+            @ApiParam(value = "", required = true) @PathVariable("query") String query,
+            @ApiParam(value = "", required = true) @PathVariable("searchTerm") String searchTerm
+    ) {
+        ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+
         try {
-            CustomerCall customerCall = null;
-            
+            CustomerCall customerCall = new CustomerCall();
+
             switch (query) {
                 case "id":
                     // Search according to customer number
-                    customerCall = new CustomerCall();
-                    
-                    
                     ArrayList<?> envCustomer = customerCall.findByCustomerNumber(searchTerm);
-                    
-                    if (envCustomer.size() > 0) {                    
-                        customerResponse.setMessage("Success");
-                        responseCode = HttpStatus.OK;
-                    }
-                    
-                    customerResponse.setResponseCode(responseCode.value());
-                    customerResponse.setCustomers((ArrayList<Customer>) envCustomer);
-                    
-                    response = new ResponseEntity<>(customerResponse, responseCode);
+
+                    response = (ResponseEntity<Object>) (envCustomer.size() <= 0
+                            ? new ResponseEntity<>(new NotFound(HttpStatus.NOT_FOUND.value(), "Customer not found"), HttpStatus.NOT_FOUND)
+                            : new ResponseEntity<>(new CustomerResponse(HttpStatus.OK.value(), "Success", (ArrayList<Customer>) envCustomer), HttpStatus.OK));
+
                     break;
                 case "phone":
                     // Search according to phone number
-                    customerCall = new CustomerCall();
-                    
-                    String phoneNumber = searchTerm;
-                    ArrayList<?> customers1 = customerCall.findByPhoneNumber(phoneNumber); 
-                    
-                    if (customers1.size() > 0){
-                        responseCode = HttpStatus.OK;
-                        customerResponse.setMessage("Success");
-                    }
-                    customerResponse.setResponseCode(responseCode.value());
-                    customerResponse.setCustomers((ArrayList<Customer>) customers1);
-                    
-                    response = new ResponseEntity<>(customerResponse, responseCode);
+                    ArrayList<?> customers1 = customerCall.findByPhoneNumber(searchTerm);
+
+                    response = (ResponseEntity<Object>) (customers1.size() <= 0
+                            ? new ResponseEntity<>(new NotFound(HttpStatus.NOT_FOUND.value(), "Customer not found"), HttpStatus.NOT_FOUND)
+                            : new ResponseEntity<>(new CustomerResponse(HttpStatus.OK.value(), "Success", (ArrayList<Customer>) customers1), HttpStatus.OK));
+
                     break;
                 default:
                     break;
             }
-            
+
         } catch (SQLException ex) {
-            customerResponse.setMessage(ex.getMessage());
-            customerResponse.setResponseCode(responseCode.value());
-            response = new ResponseEntity<>(customerResponse, responseCode);
+            response = new ResponseEntity<>((Object) new NotFound(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
             Logger.getLogger(CustomerApiController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            customerResponse.setMessage(ex.getMessage());
-            customerResponse.setResponseCode(responseCode.value());
-            response = new ResponseEntity<>(customerResponse, responseCode);
+            response = new ResponseEntity<>((Object) new NotFound(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
             Logger.getLogger(CustomerApiController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return response;
     }
 

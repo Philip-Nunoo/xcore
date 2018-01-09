@@ -8,7 +8,7 @@ package io.swagger.api;
 import io.swagger.model.Customer;
 
 import io.swagger.annotations.*;
-import io.swagger.model.CustomerResponse;
+import io.swagger.model.NotFound;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +24,12 @@ public interface CustomerApi {
     }, tags={ "Customer", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK", response = Customer.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class) })
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class),
+    @ApiResponse(code = 404, message = "Account not found", response = NotFound.class)})
     
     @RequestMapping(value = "/customer/{query}/{searchTerm}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<CustomerResponse> customerQuerySearchTermGet(@ApiParam(value = "",required=true ) @PathVariable("query") String query,@ApiParam(value = "",required=true ) @PathVariable("searchTerm") String searchTerm);
+    ResponseEntity<Object> customerQuerySearchTermGet(@ApiParam(value = "",required=true ) @PathVariable("query") String query,@ApiParam(value = "",required=true ) @PathVariable("searchTerm") String searchTerm);
 
 }

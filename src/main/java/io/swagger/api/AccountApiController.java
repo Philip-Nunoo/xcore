@@ -7,9 +7,6 @@ import io.swagger.model.MandateResponse;
 import envtest.model.TransEnquiry;
 import envtest.model.TransactionPosting;
 import envtest.proc.AccountCall;
-import io.swagger.model.Balance;
-
-import io.swagger.model.Account;
 import io.swagger.model.AccountPostingResponse;
 import io.swagger.model.NotFound;
 import io.swagger.model.TransactionsResponse;
