@@ -12,11 +12,11 @@ package io.swagger.model;
 public class NotFound {
 
     private String message;
-    private final int code;
+    private final int responseCode;
 
     public NotFound(int code, String message) {
         this.message = message;
-        this.code = code;
+        this.responseCode = code;
     }
 
     public String getMessage() {
@@ -28,7 +28,7 @@ public class NotFound {
     }
 
     public int getCode() {
-        return code;
+        return responseCode;
     }
 
 }
