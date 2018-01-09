@@ -11,6 +11,7 @@ import io.swagger.model.Balance;
 import io.swagger.annotations.*;
 import io.swagger.model.AccountPostingResponse;
 import io.swagger.model.MandateResponse;
+import io.swagger.model.NotFound;
 import io.swagger.model.TransactionsResponse;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +31,15 @@ public interface AccountApi {
         @Authorization(value = "apiSecret")
     }, tags = {"Account",})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = Account.class)
-        ,
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)})
+        @ApiResponse(code = 200, message = "OK", response = Account.class),
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class),
+        @ApiResponse(code = 404, message = "Account not found", response = NotFound.class)}
+    )
 
     @RequestMapping(value = "/account/{accountId}",
             produces = {"application/json"},
             method = RequestMethod.GET)
-    ResponseEntity<Account> retrieveAccount(
+    ResponseEntity<Object> retrieveAccount(
             @ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId
     );
 

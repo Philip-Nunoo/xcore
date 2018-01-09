@@ -11,6 +11,7 @@ import io.swagger.model.Balance;
 
 import io.swagger.model.Account;
 import io.swagger.model.AccountPostingResponse;
+import io.swagger.model.NotFound;
 import io.swagger.model.TransactionsResponse;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -67,18 +68,17 @@ public class AccountApiController implements AccountApi {
     }
 
     @Override
-    public ResponseEntity<Account> retrieveAccount(
+    public ResponseEntity<Object> retrieveAccount(
             @ApiParam(value = "The account id of the account", required=true) @PathVariable("accountId") String accountId
     ) {
-        ResponseEntity<Account> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<Object> response = new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 
         try {
             AccountCall accountCall = new AccountCall(accountId);
-            
             envtest.model.Account account = accountCall.findAccountById(accountId);
             
-            response = (ResponseEntity<Account>) ( account == null ?
-                    new ResponseEntity<>(HttpStatus.NOT_FOUND) :
+            response = (ResponseEntity<Object>) ( account == null ?
+                    new ResponseEntity<>(new NotFound(HttpStatus.NOT_FOUND.value(), "Account not found"), HttpStatus.NOT_FOUND) :
                     new ResponseEntity<>(account, HttpStatus.OK));
             
         } catch (SQLException ex) {
