@@ -24,6 +24,13 @@ public class CustomerResponse {
     
     @JsonProperty("customers")
     private ArrayList<Customer> customers = new ArrayList<>();
+
+    public CustomerResponse(int responseCode, String message, ArrayList<Customer> customers) {
+        this.responseCode = responseCode;
+        this.message = message;
+        this.customers = customers;
+        this.length = customers.size();
+    }
     
     public int getLength() {
         return length;
