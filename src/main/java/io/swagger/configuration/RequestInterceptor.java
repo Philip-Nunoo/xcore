@@ -64,10 +64,10 @@ public class RequestInterceptor implements HandlerInterceptor {
             String directoryPath = (Config.SERVER_DEV_PORT == request.getLocalPort())
                     ? "C://xcore-dev/requests/"
                     : "C://xcore/requests/";
-            directoryPath = Helpers.isUnix() ? "/opt/api/logs/" : directoryPath;
+            directoryPath = Helpers.isUnix() ? "/opt/api/logs/requests/" : directoryPath;
 
             String fileName = directoryPath + "request." + com.union.corelogger.Helper.currentDateTime("yyyy-MM-dd") + ".csv";
-            System.out.format("REQ %s >> ~ (%s) %s%s%n", method, Helper.currentDateTime(), ipAddr, requestUrl);
+            System.out.format("REQ %s >> ~ (%s) %s %s %n", method, Helper.currentDateTime(), ipAddr, requestUrl);
             
             String resource = (apiResource.length > 0) ? apiResource[0] : "Unidentified Resource";
             
@@ -89,7 +89,11 @@ public class RequestInterceptor implements HandlerInterceptor {
                 if (requestUri.contains("request") && apiClient.getRqst_endpt().equals("Y")) {
                     return true;
                 }
-                System.out.println("Invalid requested resource.");
+                
+                if (requestUri.contains("error")) {
+                    return true;
+                }
+                System.out.println("Invalid requested resource. " + requestUri + " : " + apiClient.getRqst_endpt());
                 return false;
             } else {
                 // TODO: Log unauthorized attempt and IP
