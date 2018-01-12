@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T09:55:07.361Z")
 
@@ -31,8 +32,10 @@ public interface AccountApi {
         @Authorization(value = "apiSecret")
     }, tags = {"Account",})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = Account.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class),
+        @ApiResponse(code = 200, message = "OK", response = Account.class)
+        ,
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)
+        ,
         @ApiResponse(code = 404, message = "Account not found", response = NotFound.class)
     })
 
@@ -49,8 +52,10 @@ public interface AccountApi {
         @Authorization(value = "apiSecret")
     }, tags = {"Account",})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = Balance.class),
-        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class),
+        @ApiResponse(code = 200, message = "OK", response = Balance.class)
+        ,
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class)
+        ,
         @ApiResponse(code = 404, message = "Account not found", response = NotFound.class)
     })
 
@@ -159,7 +164,8 @@ public interface AccountApi {
         @Authorization(value = "apiSecret")
     }, tags = {"Account",})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = TransactionsResponse.class)})
+        @ApiResponse(code = 200, message = "OK", response = TransactionsResponse.class)
+    })
 
     @RequestMapping(value = "/account/{accountId}/transactions",
             method = RequestMethod.GET)
@@ -170,4 +176,29 @@ public interface AccountApi {
             @ApiParam(value = "") @RequestParam(value = "limit", required = false) Integer limit
     );
 
+    @ApiOperation(value = "Cheque deposit", notes = "Cheque deposit", response = Void.class, authorizations = {
+        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiSecret")
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = Void.class),
+        @ApiResponse(code = 404, message = "Not found", response = NotFound.class)
+    })
+    
+    @RequestMapping(value = "/account/{accountId}/cheque/{chequeNumber}/deposit", method = RequestMethod.POST)
+    ResponseEntity<Object> checkDeposit(
+            @ApiParam(value = "The account id of the account to deposit", required = true) @PathVariable("accountId") String accountId,
+            @ApiParam(value = "The cheque number", required = true) @PathVariable("chequeNumber") String chequeNumber,
+            @ApiParam(value = "The debit account id", required = true) @RequestParam("debitAccountId") String debitAccountId,
+            @ApiParam(value = "Amount to deposit", required = true) @RequestParam(value = "amount", required = true) String amount,
+            @ApiParam(value = "The documentRef", required = true) @RequestParam(value = "documentRef", required = true) String documentRef,
+            @ApiParam(value = "The transaction narration", required = true) @RequestParam(value = "narration", required = true) String narration,
+            @ApiParam(value = "The the teller posting transaction") @RequestParam(value = "postBy", required = false) String postBy,
+            @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value = "appBy", required = false) String appBy,
+            @ApiParam(value = "The customerTelephone") @RequestParam(value = "customerTel", required = false) String customerTel,
+            @ApiParam(value = "The customer performing the transaction") @RequestParam(value = "transBy", required = false) String transBy,
+            @ApiParam(value = "Cheque front", required = true) @RequestParam(value="file1", required=true) String file1,
+            @ApiParam(value = "Cheque back", required = true) @RequestParam(value="file2", required=true) String file2,
+            HttpServletRequest request
+    );
 }
