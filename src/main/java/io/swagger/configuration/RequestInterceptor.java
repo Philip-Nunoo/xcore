@@ -77,22 +77,13 @@ public class RequestInterceptor implements HandlerInterceptor {
                 
                 request.setAttribute("terminal", apiClient.getTerminal());
                 
-                if (requestUri.contains("user") && apiClient.getUser_endpt().equals("Y")) {
-                    return true;
-                }
-                if (requestUri.contains("account") && apiClient.getAcct_endpt().equals("Y")) {
-                    return true;
-                }
-                if (requestUri.contains("customer") && apiClient.getCust_endpt().equals("Y")) {
-                    return true;
-                }
-                if (requestUri.contains("request") && apiClient.getRqst_endpt().equals("Y")) {
-                    return true;
-                }
+                if (requestUri.contains("user") && apiClient.getUser_endpt().equals("Y")) { return true; }
+                if (requestUri.contains("account") && apiClient.getAcct_endpt().equals("Y")) { return true; }
+                if (requestUri.contains("customer") && apiClient.getCust_endpt().equals("Y")) { return true; }
+                if (requestUri.contains("request") && apiClient.getRqst_endpt().equals("Y")) { return true; }                
+                if (requestUri.contains("error")) { return true; }                
+                if (requestUri.contains("info")) { return true; }
                 
-                if (requestUri.contains("error")) {
-                    return true;
-                }
                 System.out.println("Invalid requested resource. " + requestUri + " : " + apiClient.getRqst_endpt());
                 return false;
             } else {
