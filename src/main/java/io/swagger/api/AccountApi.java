@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T09:55:07.361Z")
 
@@ -177,14 +176,16 @@ public interface AccountApi {
     );
 
     @ApiOperation(value = "Cheque deposit", notes = "Cheque deposit", response = Void.class, authorizations = {
-        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiKey")
+        ,
         @Authorization(value = "apiSecret")
     }, tags = {"Account",})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = Void.class),
+        @ApiResponse(code = 200, message = "OK", response = Void.class)
+        ,
         @ApiResponse(code = 404, message = "Not found", response = NotFound.class)
     })
-    
+
     @RequestMapping(value = "/account/{accountId}/cheque/{chequeNumber}/deposit", method = RequestMethod.POST)
     ResponseEntity<Object> checkDeposit(
             @ApiParam(value = "The account id of the account to deposit", required = true) @PathVariable("accountId") String accountId,
@@ -197,8 +198,8 @@ public interface AccountApi {
             @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value = "appBy", required = false) String appBy,
             @ApiParam(value = "The customerTelephone") @RequestParam(value = "customerTel", required = false) String customerTel,
             @ApiParam(value = "The customer performing the transaction") @RequestParam(value = "transBy", required = false) String transBy,
-            @ApiParam(value = "Cheque front", required = true) @RequestParam(value="file1", required=true) String file1,
-            @ApiParam(value = "Cheque back", required = true) @RequestParam(value="file2", required=true) String file2,
+            @ApiParam(value = "Cheque front", required = true) @RequestParam(value = "file1", required = true) String file1,
+            @ApiParam(value = "Cheque back", required = true) @RequestParam(value = "file2", required = true) String file2,
             HttpServletRequest request
     );
 }

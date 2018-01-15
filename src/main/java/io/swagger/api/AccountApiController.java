@@ -7,12 +7,10 @@ import io.swagger.model.MandateResponse;
 import envtest.model.TransEnquiry;
 import envtest.model.TransactionPosting;
 import envtest.proc.AccountCall;
-import envtest.proc.exception.X100ProcException;
 import io.swagger.model.AccountPostingResponse;
 import io.swagger.model.NotFound;
 import io.swagger.model.TransactionsResponse;
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,14 +21,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
-import org.hibernate.Hibernate;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T09:55:07.361Z")
 @Controller
