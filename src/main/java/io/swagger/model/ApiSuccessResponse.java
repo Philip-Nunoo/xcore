@@ -22,6 +22,10 @@ public class ApiSuccessResponse {
         this.message = message;
     }
 
+    public ApiSuccessResponse() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public ApiSuccessResponse code(int responseCode) {
         this.responseCode = responseCode;
         return this;

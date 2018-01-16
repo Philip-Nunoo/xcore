@@ -13,13 +13,71 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T09:55:07.361Z")
 
 @Api(value = "request", description = "the request API")
 public interface RequestApi {
+    
+    @ApiOperation(value = "Service Request(Cheque book)", notes = "Request for cheque book from core", response = ApiSuccessResponse.class, authorizations = {
+        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiSecret")
+    }, tags={ "Request", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class) })
+    
+    @RequestMapping(value = "/request/cheque-book",
+        produces = { "application/json" }, 
+        consumes = { "application/x-www-form-urlencoded" },
+        method = RequestMethod.POST)
+    ResponseEntity<ApiSuccessResponse> requestChequeBookPost(
+            @ApiParam(value = "", required=true) @RequestParam(value="accountId", required=true)  String accountId,
+            @ApiParam(value = "Number of leaves", required=true) @RequestParam(value="leaves", required=true)  String leaves,
+            @ApiParam(value = "", required=true) @RequestParam(value="userid", required=true)  String userid
+            );
+    
+    @ApiOperation(value = "Service Request(Statement)", notes = "Request for statement from core", response = ApiSuccessResponse.class, authorizations = {
+        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiSecret")
+    }, tags={ "Request", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class) })
+    
+    @RequestMapping(value = "/request/Statement",
+        produces = { "application/json" }, 
+        consumes = { "application/x-www-form-urlencoded" },
+        method = RequestMethod.POST)
+    ResponseEntity<ApiSuccessResponse> requestStatement(
+            @ApiParam(value = " accountid", required=true) @RequestParam(value="accountid", required=true)  String accountid,
+            @ApiParam(value = " start date", required=true) @RequestParam(value="startdate", required=true)  String startdate,
+            @ApiParam(value = "end date", required=true) @RequestParam(value="enddate", required=true)  String enddate,
+            @ApiParam(value = "statement type", required=true) @RequestParam(value="statementtype", required=true)  String statementtype,
+            @ApiParam(value = "user id", required=true) @RequestParam(value="userid", required=true)  String userid
+            );
 
+    @ApiOperation(value = "Service Request(Stop Check)", notes = "Request for stop a check from core", response = ApiSuccessResponse.class, authorizations = {
+        @Authorization(value = "apiKey"),
+        @Authorization(value = "apiSecret")
+    }, tags={ "Request", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class) })
+    
+    @RequestMapping(value = "/request/stop-check",
+        produces = { "application/json" }, 
+        consumes = { "application/x-www-form-urlencoded" },
+        method = RequestMethod.POST)
+    ResponseEntity<ApiSuccessResponse> requestStopCheckPost(
+        @ApiParam(value = "", required=true) @RequestParam(value="accountId", required=true)  String accountId,
+        @ApiParam(value = "", required=true) @RequestParam(value="StartCheque", required=true)  String StartCheque,
+        @ApiParam(value = "", required=true) @RequestParam(value="EndCheque", required=true)  String EndCheque ,
+        @ApiParam(value = "", required=true) @RequestParam(value="IssueDate", required=true)  String IssueDate ,
+        @ApiParam(value = "", required=true) @RequestParam(value="BeneficaryName", required=true)  String BeneficaryName ,
+        @ApiParam(value = "", required=true) @RequestParam(value="ChequeAmount", required=true)  String ChequeAmount 
+    
+    );        
+    // end
     @ApiOperation(value = "Service Request(ATM)", notes = "Request for an atm from core", response = ApiSuccessResponse.class, authorizations = {
         @Authorization(value = "apiKey")
         ,
@@ -33,20 +91,6 @@ public interface RequestApi {
             consumes = {"application/x-www-form-urlencoded"},
             method = RequestMethod.POST)
     ResponseEntity<ApiSuccessResponse> requestAtmPost(@ApiParam(value = "", required = true) @RequestPart(value = "accountId", required = true) String accountId, @ApiParam(value = "", required = true) @RequestPart(value = "displayName", required = true) String displayName, @ApiParam(value = "", required = true) @RequestPart(value = "deliveryMethod", required = true) String deliveryMethod, @ApiParam(value = "", required = true) @RequestPart(value = "cardType", required = true) String cardType);
-
-    @ApiOperation(value = "Service Request(Cheque book)", notes = "Request for cheque book from core", response = ApiSuccessResponse.class, authorizations = {
-        @Authorization(value = "apiKey")
-        ,
-        @Authorization(value = "apiSecret")
-    }, tags = {"Request",})
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class)})
-
-    @RequestMapping(value = "/request/cheque-book",
-            produces = {"application/json"},
-            consumes = {"application/x-www-form-urlencoded"},
-            method = RequestMethod.POST)
-    ResponseEntity<ApiSuccessResponse> requestChequeBookPost(@ApiParam(value = "", required = true) @RequestPart(value = "accountId", required = true) String accountId, @ApiParam(value = "", required = true) @RequestPart(value = "currency", required = true) String currency, @ApiParam(value = "The document number", required = true) @RequestPart(value = "docNumber", required = true) String docNumber, @ApiParam(value = "Number of leaves", required = true) @RequestPart(value = "leaves", required = true) String leaves, @ApiParam(value = "", required = true) @RequestPart(value = "deliveryChannel", required = true) String deliveryChannel, @ApiParam(value = "", required = true) @RequestPart(value = "deliveryBranch", required = true) String deliveryBranch);
 
     @ApiOperation(value = "Service Request(Email)", notes = "Request for email from core", response = ApiSuccessResponse.class, authorizations = {
         @Authorization(value = "apiKey")
@@ -68,26 +112,18 @@ public interface RequestApi {
         @Authorization(value = "apiSecret")
     }, tags = {"Request",})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class)})
+        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class),
+        @ApiResponse(code = 404, message = "Not Found", response = NotFound.class),
+    })
 
     @RequestMapping(value = "/request/sms",
             produces = {"application/json"},
             consumes = {"application/x-www-form-urlencoded"},
             method = RequestMethod.POST)
-    ResponseEntity<ApiSuccessResponse> requestSmsPost(@ApiParam(value = "", required = true) @RequestPart(value = "serviceType", required = true) String serviceType, @ApiParam(value = "", required = true) @RequestPart(value = "bbanNumber", required = true) String bbanNumber, @ApiParam(value = "", required = true) @RequestPart(value = "currencyCode", required = true) String currencyCode, @ApiParam(value = "", required = true) @RequestPart(value = "phoneNumber", required = true) String phoneNumber);
-
-    @ApiOperation(value = "Service Request(Stop Check)", notes = "Request for stop a check from core", response = ApiSuccessResponse.class, authorizations = {
-        @Authorization(value = "apiKey"),
-        @Authorization(value = "apiSecret")
-    }, tags = {"Request",})
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class)})
-
-    @RequestMapping(value = "/request/stop-check",
-            produces = {"application/json"},
-            consumes = {"application/x-www-form-urlencoded"},
-            method = RequestMethod.POST)
-    ResponseEntity<ApiSuccessResponse> requestStopCheckPost(@ApiParam(value = "", required = true) @RequestPart(value = "accountId", required = true) String accountId, @ApiParam(value = "", required = true) @RequestPart(value = "chequeNumber", required = true) String chequeNumber, @ApiParam(value = "", required = true) @RequestPart(value = "reason", required = true) String reason);
+    ResponseEntity<Object> requestSmsPost(
+            @ApiParam(value = "accountId", required = true) @RequestPart(value = "accountId", required = true) String accountId,
+            @ApiParam(value = "post by", required = true) @RequestPart(value = "postBy", required = true) String postBy
+    );
 
     @ApiOperation(value = "Verify Cheque number", notes = "Verify user provided cheque", response = ApiSuccessResponse.class, authorizations = {
         @Authorization(value = "apiKey"),
