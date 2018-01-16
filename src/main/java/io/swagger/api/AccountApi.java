@@ -78,7 +78,7 @@ public interface AccountApi {
             method = RequestMethod.GET)
     ResponseEntity<MandateResponse> retrieveAccountMandate(@ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId);
 
-    @ApiOperation(value = "Deposit amount into account", notes = "Make deposit on account", response = Balance.class, authorizations = {
+    @ApiOperation(value = "Deposit amount into account", notes = "Make deposit on account", response = AccountPostingResponse.class, authorizations = {
         @Authorization(value = "apiKey")
         ,
         @Authorization(value = "apiSecret")
@@ -101,6 +101,31 @@ public interface AccountApi {
             @ApiParam(value = "Indicate if it need approval by a user") @RequestParam(value = "appBy", required = false) String appBy,
             @ApiParam(value = "The customerTelephone") @RequestParam(value = "customerTel", required = false) String customerTel,
             @ApiParam(value = "The customer performing the transaction") @RequestParam(value = "transBy", required = false) String transBy,
+            HttpServletRequest request
+    );
+
+    @ApiOperation(value = "Cheque Deposit ACH", notes = "Deposit cheque through ACH", response = AccountPostingResponse.class, authorizations = {
+        @Authorization(value = "apiKey")
+        ,
+        @Authorization(value = "apiSecret")
+    }, tags = {"Account",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = AccountPostingResponse.class),
+        @ApiResponse(code = 401, message = "API key is missing or invalid", response = Void.class),
+        @ApiResponse(code = 404, message = "Not Found", response = NotFound.class)
+    })
+
+    @RequestMapping(value = "/account/{debitAccount}/ach/{creditAccount}/deposit",
+            produces = {"application/json"},
+            consumes = {"application/x-www-form-urlencoded"},
+            method = RequestMethod.PUT)
+    ResponseEntity<Object> accountChequeDepositACH(
+            @ApiParam(value = "The debit Account", required = true) @PathVariable("debitAccount") String debitAccount,
+            @ApiParam(value = "The credit Account", required = true) @PathVariable("creditAccount") String creditAccount,
+            @ApiParam(value = "Amount to deposit", required = true) @RequestParam(value = "amount", required = true) String amount,
+            @ApiParam(value = "The bank code", required = true) @RequestParam(value = "bankCode", required = true) String bankCode,
+            @ApiParam(value = "The bank name", required = true) @RequestParam(value = "bankName", required = true) String bankName,
+            @ApiParam(value = "The transaction narration") @RequestParam(value = "narration", required = true) String narration,
             HttpServletRequest request
     );
 

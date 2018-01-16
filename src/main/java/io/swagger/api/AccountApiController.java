@@ -164,6 +164,46 @@ public class AccountApiController implements AccountApi {
     }
 
     @Override
+    public ResponseEntity<Object> accountChequeDepositACH(
+            @ApiParam(value = "The debit Account", required = true) @PathVariable("debitAccount") String debitAccount,
+            @ApiParam(value = "The credit Account", required = true) @PathVariable("creditAccount") String creditAccount,
+            @ApiParam(value = "Amount to deposit", required = true) @RequestParam(value = "amount", required = true) String amount,
+            @ApiParam(value = "The bank code", required = true) @RequestParam(value = "bankCode", required = true) String bankCode,
+            @ApiParam(value = "The bank name", required = true) @RequestParam(value = "bankName", required = true) String bankName,
+            @ApiParam(value = "The transaction narration") @RequestParam(value = "narration", required = true) String narration,
+            HttpServletRequest request
+    ) {
+        ResponseEntity<Object> responseEntity;
+
+        AccountCall accountCall;
+        try {
+            accountCall = new AccountCall(creditAccount);
+            TransactionPosting chequeDepositACH = accountCall.chequeDepositACH(debitAccount, creditAccount, Float.parseFloat(amount), bankCode, bankName, narration);
+
+            int status = chequeDepositACH.isResponse() ? HttpStatus.OK.value() : HttpStatus.NOT_FOUND.value();
+
+            responseEntity = new ResponseEntity<>(
+                    (Object) new AccountPostingResponse(status, chequeDepositACH.getMessage()),
+                    HttpStatus.valueOf(status)
+            );
+        } catch (SQLException ex) {
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+            responseEntity = new ResponseEntity<>(
+                    (Object) new NotFound(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        } catch (Exception ex) {
+            Logger.getLogger(AccountApiController.class.getName()).log(Level.SEVERE, null, ex);
+            responseEntity = new ResponseEntity<>(
+                    (Object) new NotFound(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return responseEntity;
+    }
+
+    @Override
     public ResponseEntity<AccountPostingResponse> accountAccountIdWithdrawalPut(
             @ApiParam(value = "The account id of the account", required = true) @PathVariable("accountId") String accountId,
             @ApiParam(value = "Amount to deposit", required = true) @RequestParam(value = "amount", required = true) String amount,
