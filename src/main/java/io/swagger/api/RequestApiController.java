@@ -46,10 +46,30 @@ public class RequestApiController implements RequestApi {
     }
 
     @Override
-    public ResponseEntity<ApiSuccessResponse> requestEmailPost(@ApiParam(value = "", required = true) @RequestPart(value = "accountId", required = true) String accountId,
-            @ApiParam(value = "", required = true) @RequestPart(value = "emailAddress", required = true) String emailAddress) {
-        // do some magic!
-        return new ResponseEntity<ApiSuccessResponse>(HttpStatus.OK);
+    public ResponseEntity<Object> requestEmailPost(
+            @ApiParam(value = "accountId", required = true) @RequestPart(value = "accountId", required = true) String accountId,
+            @ApiParam(value = "post by", required = true) @RequestPart(value = "postBy", required = true) String postBy
+    ) {
+        ResponseEntity<Object> responseEntity;
+        
+        try {
+            String terminalId = "terminal_id";
+            RequestCall requestCall = new RequestCall(accountId);
+            RequestResponse toggleEmailAlert = requestCall.toggleEmailAlert(postBy, terminalId);
+            
+            responseEntity = new ResponseEntity<>(
+                    (Object) new ApiSuccessResponse((int) toggleEmailAlert.getResponseCode(), toggleEmailAlert.getMessage()),
+                    HttpStatus.valueOf((int) toggleEmailAlert.getResponseCode())
+            );
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestApiController.class.getName()).log(Level.SEVERE, null, ex);
+            
+            responseEntity = new ResponseEntity<>(
+                    (Object) new NotFound(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage()),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+        return responseEntity;
     }
 
     @Override

@@ -92,20 +92,6 @@ public interface RequestApi {
             method = RequestMethod.POST)
     ResponseEntity<ApiSuccessResponse> requestAtmPost(@ApiParam(value = "", required = true) @RequestPart(value = "accountId", required = true) String accountId, @ApiParam(value = "", required = true) @RequestPart(value = "displayName", required = true) String displayName, @ApiParam(value = "", required = true) @RequestPart(value = "deliveryMethod", required = true) String deliveryMethod, @ApiParam(value = "", required = true) @RequestPart(value = "cardType", required = true) String cardType);
 
-    @ApiOperation(value = "Service Request(Email)", notes = "Request for email from core", response = ApiSuccessResponse.class, authorizations = {
-        @Authorization(value = "apiKey")
-        ,
-        @Authorization(value = "apiSecret")
-    }, tags = {"Request",})
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class)})
-
-    @RequestMapping(value = "/request/email",
-            produces = {"application/json"},
-            consumes = {"application/x-www-form-urlencoded"},
-            method = RequestMethod.POST)
-    ResponseEntity<ApiSuccessResponse> requestEmailPost(@ApiParam(value = "", required = true) @RequestPart(value = "accountId", required = true) String accountId, @ApiParam(value = "", required = true) @RequestPart(value = "emailAddress", required = true) String emailAddress);
-
     @ApiOperation(value = "Service Request(SMS)", notes = "Request for sms from core", response = ApiSuccessResponse.class, authorizations = {
         @Authorization(value = "apiKey")
         ,
@@ -121,6 +107,25 @@ public interface RequestApi {
             consumes = {"application/x-www-form-urlencoded"},
             method = RequestMethod.POST)
     ResponseEntity<Object> requestSmsPost(
+            @ApiParam(value = "accountId", required = true) @RequestPart(value = "accountId", required = true) String accountId,
+            @ApiParam(value = "post by", required = true) @RequestPart(value = "postBy", required = true) String postBy
+    );
+    
+    @ApiOperation(value = "Service Request(Email)", notes = "Request for email from core", response = ApiSuccessResponse.class, authorizations = {
+        @Authorization(value = "apiKey")
+        ,
+        @Authorization(value = "apiSecret")
+    }, tags = {"Request",})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = ApiSuccessResponse.class),
+        @ApiResponse(code = 404, message = "Not Found", response = NotFound.class),
+    })
+
+    @RequestMapping(value = "/request/email",
+            produces = {"application/json"},
+            consumes = {"application/x-www-form-urlencoded"},
+            method = RequestMethod.POST)
+    ResponseEntity<Object> requestEmailPost(
             @ApiParam(value = "accountId", required = true) @RequestPart(value = "accountId", required = true) String accountId,
             @ApiParam(value = "post by", required = true) @RequestPart(value = "postBy", required = true) String postBy
     );
