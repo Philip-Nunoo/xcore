@@ -359,7 +359,7 @@ paths:
           schema:
             $ref: '#/definitions/TransactionsResponse'
           description: OK
-  '/account/{accountId}/withdrawal':
+  '/account/{accountId}/withdraw':
     put:
       summary: Withdraw money
       description: Withdraw money from an account
